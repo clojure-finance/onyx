@@ -7,7 +7,7 @@
             [onyx.tasks.seq]
             [onyx.tasks.null]
             [onyx.tasks.function]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.test-helper :refer [load-config with-test-env add-test-env-peers!]]
             [schema.core :as s]))
 

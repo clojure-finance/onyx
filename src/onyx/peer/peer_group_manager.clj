@@ -6,7 +6,7 @@
             [onyx.log.curator :as curator]
             [onyx.static.default-vals :refer [arg-or-default]]
             [onyx.static.util :refer [ms->ns]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.peer.communicator :as comm]
             [onyx.extensions :as extensions])
   (:import [java.util.concurrent.locks LockSupport]

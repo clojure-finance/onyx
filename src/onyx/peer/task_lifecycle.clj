@@ -3,7 +3,7 @@
             [com.stuartsierra.component :as component]
             [onyx.schema :as os]
             [onyx.static.planning :as planning :refer [find-task]]
-            [onyx.static.uuid :as uuid]
+            [clojure.core :refer [random-uuid]]
             [onyx.extensions :as extensions]
             [onyx.checkpoint :as cp]
             [onyx.compression.nippy :refer [checkpoint-compress checkpoint-decompress]]
@@ -133,7 +133,7 @@
   (-> state
       (set-context! nil)
       (reset-event!)
-      (update-event! #(assoc % :onyx.core/lifecycle-id (uuid/random-uuid)))
+      (update-event! #(assoc % :onyx.core/lifecycle-id (random-uuid)))
       (t/seal-checkpoints!)
       (advance)))
 

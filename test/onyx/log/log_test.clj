@@ -7,7 +7,7 @@
             [onyx.test-helper :refer [load-config with-test-env]]
             [schema.test]
             [clojure.test :refer [deftest is testing use-fixtures]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.api]))
 
 (use-fixtures :once schema.test/validate-schemas)

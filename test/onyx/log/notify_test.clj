@@ -9,7 +9,7 @@
             [onyx.monitoring.no-op-monitoring :refer [no-op-monitoring-agent]]
             [onyx.api]
             [schema.test]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [clojure.test :refer [deftest is testing use-fixtures]]
             [clojure.test :refer [deftest is testing use-fixtures]]
             [onyx.log.curator :as zk]))

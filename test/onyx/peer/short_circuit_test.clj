@@ -6,7 +6,7 @@
             [onyx.peer.coordinator :as coordinator]
             [org.senatehouse.expect-call :as expect-call :refer [with-expect-call]]
             [onyx.test-helper :refer [load-config with-test-env add-test-env-peers!]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.api]))
 
 (def n-messages 100)

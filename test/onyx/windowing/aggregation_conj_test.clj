@@ -4,7 +4,7 @@
             [onyx.plugin.core-async :refer [take-segments!]]
             [schema.core :as s]
             [onyx.schema :as os]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.api]))
 

@@ -5,7 +5,7 @@
             [clojure.test :refer [deftest is testing]]
             [onyx.schema :as os]
             [schema.core :as s]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.api]))
 
 (deftest validation-errors

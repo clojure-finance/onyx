@@ -19,3 +19,5 @@ onyx.iml
 .idea/
 /onyx.log.*
 *~
+.clj-kondo/
+.lsp/

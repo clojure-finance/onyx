@@ -3,7 +3,7 @@
             [onyx.extensions :as extensions]
             [onyx.log.entry :refer [create-log-entry]]
             [onyx.monitoring.no-op-monitoring :refer [no-op-monitoring-agent]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.plugin.core-async :refer [take-segments!]]
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.log.replica :as replica]

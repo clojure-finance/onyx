@@ -3,7 +3,7 @@
             [clojure.test :refer [deftest is testing]]
             [onyx.plugin.core-async :refer [take-segments!]]
             [onyx.test-helper :refer [load-config with-test-env feedback-exception!]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [schema.core :as s]
             [onyx.api]))
 

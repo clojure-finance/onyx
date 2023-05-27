@@ -10,7 +10,7 @@
             [onyx.log.generators :as log-gen]
             [onyx.log.replica :as replica]
             [onyx.test-helper :refer [job-allocation-counts]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.static.planning :as planning]
             [onyx.api :as api]))
 

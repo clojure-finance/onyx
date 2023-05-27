@@ -4,7 +4,7 @@
             [onyx.api :as api]
             [onyx.static.planning :as planning]
             [onyx.test-helper :refer [job-allocation-counts]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [clojure.set :refer [intersection]]
             [clojure.test.check :as tc]
             [clojure.test.check.generators :as gen]

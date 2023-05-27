@@ -3,7 +3,7 @@
             [clojure.test :refer [deftest is testing]]
             [onyx.plugin.core-async :refer [take-segments!]]
             [onyx.test-helper :refer [load-config with-test-env add-test-env-peers!]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.api]))
 
 (defn handle-exception [event lifecycle lf-kw exception]

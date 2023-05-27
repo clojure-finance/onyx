@@ -12,7 +12,7 @@
             [onyx.peer.log-version]
             [onyx.static.validation :as validator]
             [onyx.static.planning :as planning]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.gc :as garbage-collector]
             [hasch.core :refer [edn-hash uuid5]])
   (:import [java.util UUID]

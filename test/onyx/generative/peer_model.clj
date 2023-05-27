@@ -18,7 +18,7 @@
             [onyx.extensions :as extensions]
             [onyx.system :as system]
             [com.stuartsierra.component :as component]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.messaging.aeron.embedded-media-driver :as embedded-media-driver]
             [onyx.messaging.protocols.messenger :as m]
             [onyx.peer.peer-group-manager :as pm]

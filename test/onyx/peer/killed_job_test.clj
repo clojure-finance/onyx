@@ -5,7 +5,7 @@
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.extensions :as extensions]
             [schema.core :as s]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.api]))
 
 (def n-messages 15000)

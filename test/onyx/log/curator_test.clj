@@ -4,7 +4,7 @@
             [onyx.system :as system]
             [onyx.extensions :as extensions]
             [onyx.test-helper :refer [load-config with-test-env]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.log.curator :as cu]
             [onyx.compression.nippy :refer [zookeeper-compress zookeeper-decompress]]
             [taoensso.timbre :refer [fatal error warn trace info]]

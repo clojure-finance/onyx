@@ -1,7 +1,7 @@
 (ns onyx.tasks.core-async
   (:require [clojure.core.async :refer [chan]]
             [onyx.schema :as os]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.plugin.core-async]
             [schema.core :as s]))
 

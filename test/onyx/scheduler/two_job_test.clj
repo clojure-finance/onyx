@@ -5,7 +5,7 @@
             [onyx.api :as api]
             [onyx.test-helper :refer [playback-log get-counts load-config]]
             [com.stuartsierra.component :as component]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [clojure.test :refer :all]
             [clojure.test :refer [deftest is testing]]))
 

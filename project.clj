@@ -1,4 +1,4 @@
-(defproject org.onyxplatform/onyx "0.14.6"
+(defproject org.onyxmod/onyx "0.1.0"
   :description "Distributed, masterless, high performance, fault tolerant data processing for Clojure"
   :url "https://github.com/onyx-platform/onyx"
   :license {:name "Eclipse Public License"

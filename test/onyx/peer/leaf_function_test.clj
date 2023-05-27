@@ -4,7 +4,7 @@
             [taoensso.timbre :refer [info error warn trace fatal] :as timbre]
             [onyx.plugin.core-async :refer [take-segments!]]
             [onyx.test-helper :refer [load-config with-test-env]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.api]))
 
 (def n-messages 100)

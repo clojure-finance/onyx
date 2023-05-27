@@ -2,7 +2,7 @@
   (:require [clojure.core.async :refer [chan >!! <!! close! sliding-buffer]]
             [clojure.test :refer [deftest is testing]]
             [onyx.plugin.core-async :refer [take-segments!]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [taoensso.timbre :refer [info warn trace fatal] :as timbre]
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.api]))

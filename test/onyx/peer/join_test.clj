@@ -4,7 +4,7 @@
             [onyx.plugin.core-async :refer [take-segments!]]
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.api]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [taoensso.timbre :refer [info warn trace fatal] :as timbre]))
 
 (def people

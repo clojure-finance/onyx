@@ -3,7 +3,7 @@
              [clojure.core.async :refer [chan >!! <!! close! go]]
              [onyx.plugin.core-async :refer [take-segments! get-core-async-channels]]
              [onyx.test-helper :refer [load-config with-test-env]]
-             [onyx.static.uuid :refer [random-uuid]]
+             [clojure.core :refer [random-uuid]]
              [onyx.api]))
 
 (def heal? (atom false))

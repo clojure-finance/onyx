@@ -12,7 +12,7 @@
             [clojure.test :refer :all]
             [onyx.log.replica :as replica]
             [onyx.messaging.protocols.messenger :as m]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.log.commands.common :as common]
             [com.gfredericks.test.chuck :refer [times]]
             [com.gfredericks.test.chuck.clojure-test :refer [checking]]

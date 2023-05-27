@@ -3,7 +3,7 @@
             [onyx.extensions :as extensions]
             [onyx.api :as api]
             [onyx.log.replica :as replica]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.static.planning :as planning]
             [clojure.test.check :as tc]
             [clojure.test.check.generators :as gen]

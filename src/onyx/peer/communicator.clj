@@ -4,7 +4,7 @@
             [taoensso.timbre :refer [info error warn fatal trace]]
             [onyx.static.logging-configuration :as logging-config]
             [onyx.log.zookeeper :refer [zookeeper]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.extensions :as extensions]
             [onyx.peer.log-version]
             [onyx.static.default-vals :refer [arg-or-default]]))

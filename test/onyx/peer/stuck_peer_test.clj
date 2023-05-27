@@ -6,7 +6,7 @@
             [onyx.tasks.seq]
             [org.senatehouse.expect-call :as expect-call :refer [with-expect-call]]
             [onyx.test-helper :refer [load-config with-test-env add-test-env-peers! feedback-exception!]]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.job :refer [add-task]]
             [onyx.api]))
 

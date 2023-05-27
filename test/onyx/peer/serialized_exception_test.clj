@@ -4,7 +4,7 @@
             [onyx.plugin.core-async :refer [take-segments!]]
             [onyx.test-helper :refer [load-config with-test-env add-test-env-peers!]]
             [onyx.extensions :as extensions]
-            [onyx.static.uuid :refer [random-uuid]]
+            [clojure.core :refer [random-uuid]]
             [onyx.api]))
 
 (def n-messages 100)
