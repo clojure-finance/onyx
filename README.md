@@ -1,5 +1,16 @@
 # ![Logo](http://i.imgur.com/zdlOSZD.png?1) Onyx
 
+# BRANCH INFO VERSION: 0.1.0 
+## To use:
+lein install 
+
+## Include in project:
+[org.onyxmod.onyx "0.1.0"]
+
+## Changes made:
+Updated usage of random-uuid (using inbuilt clojure core function only now)
+
+
 [![Join the chat at https://gitter.im/onyx-platform/onyx](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onyx-platform/onyx?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### What is it?
