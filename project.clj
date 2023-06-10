@@ -11,7 +11,7 @@
                              :username :env
                              :password :env
                              :sign-releases false}}
-  :dependencies [[org.clojure/clojure "1.10.0"]
+  :dependencies [[org.clojure/clojure "1.11.0"]
                  [org.clojure/core.async "0.4.474"]
                  ;; lock to 2.9.1 until zookeeper can be upgraded to 3.5
                  [org.apache.curator/curator-test "2.9.1"]
@@ -28,6 +28,7 @@
                  [com.taoensso/timbre "4.8.0"]
                  [com.taoensso/nippy "2.14.0"]
                  [io.aeron/aeron-all "1.21.2"]
+                 [org.agrona/agrona "1.18.0"]
                  [io.replikativ/hasch "0.3.4"
                   :exclusions [org.clojure/clojurescript com.cognitect/transit-clj
                                com.cognitect/transit-cljs org.clojure/data.fressian
@@ -44,12 +45,14 @@
                  :jvm-opts ^:replace ["-server"
                                       "-Xmx2400M"
                                       "-XX:+UseG1GC"
-                                      "-XX:-OmitStackTraceInFastThrow"]
+                                      "-XX:-OmitStackTraceInFastThrow"
+                                      "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
+                                       "--add-opens=java.base/java.lang=ALL-UNNAMED"]
                  :profiles {:dev {:global-vars {*warn-on-reflection* true}
                                   :dependencies [[org.clojure/tools.nrepl "0.2.11"]
                                                  [org.clojure/java.jmx "0.3.4"]
                                                  [org.clojure/test.check "0.9.0"]
-                                                 [org.senatehouse/expect-call "0.2.0"]
+                                                 [org.senatehouse/expect-call "0.3.0"]
                                                  [mdrogalis/stateful-check "0.3.2"]
                                                  [lbradstreet/test.chuck "0.2.7-20160709.160608-2"]
                                                  [joda-time/joda-time "2.8.2"]]

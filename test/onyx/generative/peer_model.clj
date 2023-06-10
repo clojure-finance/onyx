@@ -501,7 +501,7 @@
                   onyx.log.failure-detector/failure-detector onyx.mocked.failure-detector/failure-detector
                   ;; Make peer group linearizable by dropping the thread / loop
                   pm/peer-group-manager-loop (fn [state])
-                  onyx.static.uuid/random-uuid (fn [] 
+                  random-uuid (fn [] 
                                                  (java.util.UUID. (.nextLong random-gen)
                                                                   (.nextLong random-gen)))
                   onyx.peer.coordinator/start-coordinator! (fn [state] 
