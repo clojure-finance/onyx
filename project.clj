@@ -12,7 +12,7 @@
                              :password :env
                              :sign-releases false}}
   :dependencies [[org.clojure/clojure "1.11.0"]
-                 [org.clojure/core.async "0.4.474"]
+                 [org.clojure/core.async "1.6.673"]
                  ;; lock to 2.9.1 until zookeeper can be upgraded to 3.5
                  [org.apache.curator/curator-test "2.9.1"]
                  [org.apache.curator/curator-framework "4.0.1"]
