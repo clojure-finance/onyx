@@ -41,7 +41,10 @@
                  [org.deephacks.lmdbjni/lmdbjni "0.4.6"]
                  [org.deephacks.lmdbjni/lmdbjni-linux64 "0.4.6"]
                  [org.deephacks.lmdbjni/lmdbjni-win64 "0.4.6"]
-                 [org.deephacks.lmdbjni/lmdbjni-osx64 "0.4.6"]]
+                 [org.deephacks.lmdbjni/lmdbjni-osx64 "0.4.6"]
+                 [org.clojure/tools.analyzer "1.1.1"]
+                 [com.taoensso/encore "3.24.0"]
+                 [io.aviso/pretty "1.4.3"]]
                  :jvm-opts ^:replace ["-server"
                                       "-Xmx2400M"
                                       "-XX:+UseG1GC"

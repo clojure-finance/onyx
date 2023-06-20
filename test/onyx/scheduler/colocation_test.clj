@@ -3,7 +3,13 @@
             [onyx.scheduling.common-job-scheduler :refer [reconfigure-cluster-workload]]
             [onyx.log.generators :refer [one-group]]
             [onyx.api]))
-
+(defn sort-by-job-and-task
+  [data]
+  (into (sorted-map)
+        (map (fn [[job-id tasks]]
+               [job-id (into (sorted-map)
+                             (map (fn [[task-id task-values]]
+                                    [task-id (sort task-values)]) tasks))]) data)))
 (deftest colocate-tasks-on-a-single-machine
   (is
    (=
@@ -89,24 +95,24 @@
     {:j1 {:t1 [:p3 :p6 :p7]
           :t2 [:p2 :p4 :p9]
           :t3 [:p1 :p5 :p8]}}
-    (:allocations
-     (let [r (one-group
-              {:messaging {:onyx.messaging/impl :aeron}
-               :job-scheduler :onyx.job-scheduler/greedy
-               :task-schedulers {:j1 :onyx.task-scheduler/colocated}
-               :peers [:p1 :p2 :p3 :p4 :p5 :p6 :p7 :p8 :p9]
-               :jobs [:j1]
-               :tasks {:j1 [:t1 :t2 :t3]}
-               :peer-sites {:p1 {:aeron/external-addr :a}
-                            :p2 {:aeron/external-addr :a}
-                            :p3 {:aeron/external-addr :a}
-                            :p4 {:aeron/external-addr :b}
-                            :p5 {:aeron/external-addr :b}
-                            :p6 {:aeron/external-addr :b}
-                            :p7 {:aeron/external-addr :c}
-                            :p8 {:aeron/external-addr :c}
-                            :p9 {:aeron/external-addr :c}}})] 
-       (reconfigure-cluster-workload r r))))))
+    (sort-by-job-and-task (:allocations
+                           (let [r (one-group
+                                    {:messaging {:onyx.messaging/impl :aeron}
+                                     :job-scheduler :onyx.job-scheduler/greedy
+                                     :task-schedulers {:j1 :onyx.task-scheduler/colocated}
+                                     :peers [:p1 :p2 :p3 :p4 :p5 :p6 :p7 :p8 :p9]
+                                     :jobs [:j1]
+                                     :tasks {:j1 [:t1 :t2 :t3]}
+                                     :peer-sites {:p1 {:aeron/external-addr :a}
+                                                  :p2 {:aeron/external-addr :a}
+                                                  :p3 {:aeron/external-addr :a}
+                                                  :p4 {:aeron/external-addr :b}
+                                                  :p5 {:aeron/external-addr :b}
+                                                  :p6 {:aeron/external-addr :b}
+                                                  :p7 {:aeron/external-addr :c}
+                                                  :p8 {:aeron/external-addr :c}
+                                                  :p9 {:aeron/external-addr :c}}})]
+                             (reconfigure-cluster-workload r r)))))))
 
 (deftest one-peer-not-in-multiple-not-used
   (is
