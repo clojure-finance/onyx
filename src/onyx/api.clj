@@ -12,7 +12,7 @@
             [onyx.peer.log-version]
             [onyx.static.validation :as validator]
             [onyx.static.planning :as planning]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.gc :as garbage-collector]
             [hasch.core :refer [edn-hash uuid5]])
   (:import [java.util UUID]
@@ -249,7 +249,7 @@
   (let [result (validate-submission job peer-config)]
     (if (:success? result)
       (let [job-hash (hash-job job)
-            id (get-in job [:metadata :job-id] (random-uuid))
+            id (get-in job [:metadata :job-id] (onyx-random-uuid))
             job (-> job
                     (assoc-in [:metadata :job-id] id)
                     (assoc-in [:metadata :job-hash] job-hash))
@@ -747,7 +747,7 @@
   (mapv
    (fn [_]
      (let [group-ch (:group-ch (:peer-group-manager peer-group))
-           peer-owner-id (random-uuid)]
+           peer-owner-id (onyx-random-uuid)]
        (>!! group-ch [:add-peer peer-owner-id])
        {:group-ch group-ch :peer-owner-id peer-owner-id}))
    (range n)))

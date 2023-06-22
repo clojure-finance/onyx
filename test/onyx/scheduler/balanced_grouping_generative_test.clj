@@ -12,13 +12,13 @@
             [clojure.test :refer :all]
             [onyx.log.replica :as replica]
             [onyx.messaging.protocols.messenger :as m]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.log.commands.common :as common]
             [com.gfredericks.test.chuck :refer [times]]
             [com.gfredericks.test.chuck.clojure-test :refer [checking]]
             [taoensso.timbre :refer [info]]))
 
-(def onyx-id (random-uuid))
+(def onyx-id (onyx-random-uuid))
 
 (def peer-config
   {:onyx/tenancy-id onyx-id

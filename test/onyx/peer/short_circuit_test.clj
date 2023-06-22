@@ -6,7 +6,7 @@
             [onyx.peer.coordinator :as coordinator]
             [org.senatehouse.expect-call :as expect-call :refer [with-expect-call]]
             [onyx.test-helper :refer [load-config with-test-env add-test-env-peers!]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.api]))
 
 (def n-messages 100)
@@ -33,7 +33,7 @@
   (assoc segment :n (inc n)))
 
 (deftest ^:smoke short-circuit-test
-  (let [id (random-uuid)
+  (let [id (onyx-random-uuid)
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id id)
         peer-config (assoc (:peer-config config) 

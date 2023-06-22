@@ -3,7 +3,7 @@
              [clojure.core.async :refer [chan >!! <!! close! go]]
              [onyx.plugin.core-async :refer [take-segments! get-core-async-channels]]
              [onyx.test-helper :refer [load-config with-test-env]]
-             [clojure.core :refer [random-uuid]]
+             [onyx.static.uuid :refer [onyx-random-uuid]]
              [onyx.api]))
 
 (def heal? (atom false))
@@ -34,7 +34,7 @@
 
 ;; broken because we don't support flow condition retries
 (t/deftest ^:broken exception-retry
-  (let [id (random-uuid)
+  (let [id (onyx-random-uuid)
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id id)
         peer-config (assoc (:peer-config config) :onyx/tenancy-id id)
@@ -69,10 +69,10 @@
                   :onyx/batch-timeout batch-timeout
                   :onyx/doc "Writes segments to a core.async channel"}]
         lifecycles [{:lifecycle/task :in
-                     :core.async/id (random-uuid)
+                     :core.async/id (onyx-random-uuid)
                      :lifecycle/calls :onyx.plugin.core-async/in-calls}
                     {:lifecycle/task :out
-                     :core.async/id (random-uuid)
+                     :core.async/id (onyx-random-uuid)
                      :lifecycle/calls :onyx.plugin.core-async/out-calls}]
         flow-conditions [{:flow/from :inc
                           :flow/to :none

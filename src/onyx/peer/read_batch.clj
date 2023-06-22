@@ -9,7 +9,7 @@
             [clj-tuple :as t]
             [onyx.types :as types]
             [primitive-math :as pm]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.static.util :refer [ns->ms ms->ns]]
             [taoensso.timbre :as timbre :refer [debug info]])
   (:import [java.util.concurrent.locks LockSupport]

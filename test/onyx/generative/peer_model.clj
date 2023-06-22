@@ -18,7 +18,7 @@
             [onyx.extensions :as extensions]
             [onyx.system :as system]
             [com.stuartsierra.component :as component]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.messaging.aeron.embedded-media-driver :as embedded-media-driver]
             [onyx.messaging.protocols.messenger :as m]
             [onyx.peer.peer-group-manager :as pm]
@@ -501,7 +501,7 @@
                   onyx.log.failure-detector/failure-detector onyx.mocked.failure-detector/failure-detector
                   ;; Make peer group linearizable by dropping the thread / loop
                   pm/peer-group-manager-loop (fn [state])
-                  random-uuid (fn [] 
+                  onyx-random-uuid (fn [] 
                                                  (java.util.UUID. (.nextLong random-gen)
                                                                   (.nextLong random-gen)))
                   onyx.peer.coordinator/start-coordinator! (fn [state] 
@@ -532,7 +532,7 @@
       (let [_ (reset! zookeeper-log [])
             _ (reset! zookeeper-store {})
             _ (reset! checkpoints {})
-            onyx-id (random-uuid)
+            onyx-id (onyx-random-uuid)
             config (load-config)
             env-config (assoc (:env-config config) 
                               :onyx/tenancy-id onyx-id

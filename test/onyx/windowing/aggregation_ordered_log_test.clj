@@ -4,7 +4,7 @@
             [onyx.plugin.core-async :refer [take-segments!]]
             [schema.core :as s]
             [onyx.schema :as os]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.api]))
 
@@ -100,7 +100,7 @@
   {:lifecycle/before-task-start inject-out-ch})
 
 (deftest ordered-log-test
-  (let [id (random-uuid)
+  (let [id (onyx-random-uuid)
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id id)
         peer-config (assoc (:peer-config config) :onyx/tenancy-id id)

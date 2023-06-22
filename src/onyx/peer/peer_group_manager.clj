@@ -6,7 +6,7 @@
             [onyx.log.curator :as curator]
             [onyx.static.default-vals :refer [arg-or-default]]
             [onyx.static.util :refer [ms->ns]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.peer.communicator :as comm]
             [onyx.extensions :as extensions])
   (:import [java.util.concurrent.locks LockSupport]
@@ -76,7 +76,7 @@
   (start-communicator! state))
 
 (defn setup-group-state [{:keys [comm peer-config group-ch monitoring] :as state}]
-  (let [group-id (random-uuid)] 
+  (let [group-id (onyx-random-uuid)] 
     (extensions/register-pulse (:log comm) group-id)
     (-> state
         (assoc :group-state {:id group-id
@@ -204,7 +204,7 @@
            connected? messenger-group state-store-group comm group-ch outbox-ch] :as state} 
    [type peer-owner-id]]
   (if connected?
-    (let [vpeer-id (random-uuid)
+    (let [vpeer-id (onyx-random-uuid)
           group-id (:id group-state)
           log (:log comm) 
           vpeer (component/start (vpeer-system-fn group-ch outbox-ch peer-config 

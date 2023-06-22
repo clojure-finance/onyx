@@ -5,7 +5,7 @@
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.extensions :as extensions]
             [schema.core :as s]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.api]))
 
 (def n-messages 15000)
@@ -50,7 +50,7 @@
   {:lifecycle/before-task-start inject-out-2-ch})
 
 (deftest kill-job
-  (let [id (random-uuid)
+  (let [id (onyx-random-uuid)
         config (load-config)
         batch-size 20
         env-config (assoc (:env-config config) :onyx/tenancy-id id)

@@ -4,7 +4,7 @@
             [taoensso.timbre :refer [info error warn fatal trace]]
             [onyx.static.logging-configuration :as logging-config]
             [onyx.log.zookeeper :refer [zookeeper]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.extensions :as extensions]
             [onyx.peer.log-version]
             [onyx.static.default-vals :refer [arg-or-default]]))
@@ -63,7 +63,7 @@
 
   (start [{:keys [log] :as component}]
     (taoensso.timbre/info "Starting Replica Subscription")
-    (let [group-id (random-uuid)
+    (let [group-id (onyx-random-uuid)
           inbox-ch (chan (arg-or-default :onyx.peer/inbox-capacity peer-config))
           origin (extensions/subscribe-to-log log inbox-ch)]
       (assoc component

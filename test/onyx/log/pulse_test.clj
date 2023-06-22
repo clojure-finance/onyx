@@ -3,7 +3,7 @@
             [onyx.extensions :as extensions]
             [onyx.log.entry :refer [create-log-entry]]
             [onyx.monitoring.no-op-monitoring :refer [no-op-monitoring-agent]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.plugin.core-async :refer [take-segments!]]
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.log.replica :as replica]
@@ -13,7 +13,7 @@
             [onyx.log.curator :as zk]))
 
 (deftest log-pulse-test
-  (let [onyx-id (random-uuid)
+  (let [onyx-id (onyx-random-uuid)
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id onyx-id)
         env (onyx.api/start-env env-config)

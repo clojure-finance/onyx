@@ -4,7 +4,7 @@
             [onyx.api :as api]
             [onyx.static.planning :as planning]
             [onyx.test-helper :refer [job-allocation-counts]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [clojure.set :refer [intersection]]
             [clojure.test.check :as tc]
             [clojure.test.check.generators :as gen]
@@ -14,7 +14,7 @@
             [com.gfredericks.test.chuck :refer [times]]
             [com.gfredericks.test.chuck.clojure-test :refer [checking]]))
 
-(def onyx-id (random-uuid))
+(def onyx-id (onyx-random-uuid))
 
 (def peer-config
   {:onyx/tenancy-id onyx-id

@@ -5,11 +5,11 @@
             [clojure.test :refer [deftest is testing]]
             [onyx.schema :as os]
             [schema.core :as s]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.api]))
 
 (deftest validation-errors
-  (let [id (random-uuid)
+  (let [id (onyx-random-uuid)
         _ (timbre/merge-config! {:appenders {:println {:enabled? false}}
                                  :level :error})
         config (load-config)

@@ -4,7 +4,7 @@
             [onyx.plugin.core-async :refer [take-segments!]]
             [schema.core :as s]
             [onyx.schema :as os]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.test-helper :refer [load-config with-test-env]]
             [onyx.api]))
 
@@ -61,7 +61,7 @@
                                    :randstuff
                                    (repeatedly 400
                                                #(rand-int 256))))))
-          id (random-uuid)
+          id (onyx-random-uuid)
           config (load-config)
           env-config (assoc (:env-config config) :onyx/tenancy-id id)
           peer-config (assoc (:peer-config config) :onyx/tenancy-id id :onyx.peer/coordinator-barrier-period-ms 20000)

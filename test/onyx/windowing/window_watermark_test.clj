@@ -2,7 +2,7 @@
   (:require [clojure.core.async :refer [chan >!! <!! close! sliding-buffer]]
             [clojure.test :refer [deftest is]]
             [onyx.plugin.core-async :refer [take-segments!]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.test-helper :refer [load-config with-test-env add-test-env-peers!]]
             [onyx.api]))
 
@@ -42,7 +42,7 @@
   (.getTime ^java.util.Date (:event-time w)))
 
 ; (deftest window-watermark-test
-;   (let [id (random-uuid)
+;   (let [id (onyx-random-uuid)
 ;         config (load-config)
 ;         env-config (assoc (:env-config config) :onyx/tenancy-id id 
 ;                           :onyx.peer/coordinator-barrier-period-ms 300)

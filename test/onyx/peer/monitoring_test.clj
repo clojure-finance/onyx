@@ -3,7 +3,7 @@
             [clojure.test :refer [deftest is testing]]
             [onyx.plugin.core-async :refer [take-segments!]]
             [onyx.test-helper :refer [load-config with-test-env]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [clojure.java.jmx :as jmx]
             [onyx.api]))
 
@@ -33,7 +33,7 @@
 (def state (atom {}))
 
 (deftest monitoring-test
-  (let [id (random-uuid)
+  (let [id (onyx-random-uuid)
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id id)
         batch-size 20

@@ -6,7 +6,7 @@
             [onyx.tasks.seq]
             [org.senatehouse.expect-call :as expect-call :refer [with-expect-call]]
             [onyx.test-helper :refer [load-config with-test-env add-test-env-peers! feedback-exception!]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.job :refer [add-task]]
             [onyx.api]))
 
@@ -44,7 +44,7 @@
   (assoc segment :n (inc n)))
 
 (deftest stuck-peer-test
-  (let [id (random-uuid)
+  (let [id (onyx-random-uuid)
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id id)
         peer-config (assoc (:peer-config config) 

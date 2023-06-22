@@ -7,7 +7,7 @@
             [onyx.lifecycles.lifecycle-compile :as lc]
             [onyx.peer.transform :as t]
             [onyx.peer.grouping :as g]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.static.validation :as validation]
             [onyx.static.logging :as logging]
             [onyx.refinements]

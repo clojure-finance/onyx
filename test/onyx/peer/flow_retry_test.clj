@@ -1,7 +1,7 @@
 (ns onyx.peer.flow-retry-test
   (:require [clojure.core.async :refer [chan >!! <!! close! sliding-buffer]]
             [clojure.test :refer [deftest is testing]]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [onyx.plugin.core-async :refer [take-segments!]]
             [taoensso.timbre :refer [info warn trace fatal] :as timbre]
             [onyx.test-helper :refer [load-config with-test-env]]
@@ -38,7 +38,7 @@
   (update-in segment [:n] inc))
 
 (deftest ^:broken flow-retry
-  (let [id (random-uuid)
+  (let [id (onyx-random-uuid)
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id id)
         peer-config (assoc (:peer-config config) :onyx/tenancy-id id)

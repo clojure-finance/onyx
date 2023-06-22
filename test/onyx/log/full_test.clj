@@ -6,7 +6,7 @@
             [onyx.api :as api]
             [onyx.test-helper :refer [with-test-env load-config]]
             [schema.test]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [clojure.test :refer [deftest is testing use-fixtures]]
             [onyx.log.curator :as zk]))
 
@@ -15,7 +15,7 @@
 (deftest ^:smoke log-full-test
   (testing "groups all join and watch each other"
     (let [config (load-config)
-          onyx-id (random-uuid)
+          onyx-id (onyx-random-uuid)
           env-config (assoc (:env-config config) :onyx/tenancy-id onyx-id)
           peer-config (assoc (:peer-config config) :onyx/tenancy-id onyx-id)
           n-groups 20]

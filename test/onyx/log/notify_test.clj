@@ -9,7 +9,7 @@
             [onyx.monitoring.no-op-monitoring :refer [no-op-monitoring-agent]]
             [onyx.api]
             [schema.test]
-            [clojure.core :refer [random-uuid]]
+            [onyx.static.uuid :refer [onyx-random-uuid]]
             [clojure.test :refer [deftest is testing use-fixtures]]
             [clojure.test :refer [deftest is testing use-fixtures]]
             [onyx.log.curator :as zk]))
@@ -17,7 +17,7 @@
 (use-fixtures :once schema.test/validate-schemas)
 
 (deftest log-notify-test
-  (let [onyx-id (random-uuid)
+  (let [onyx-id (onyx-random-uuid)
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id onyx-id)
         env (onyx.api/start-env env-config)

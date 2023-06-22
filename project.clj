@@ -17,7 +17,7 @@
                  [org.apache.curator/curator-test "2.9.1"]
                  [org.apache.curator/curator-framework "4.0.1"]
                  [org.apache.curator/curator-client "4.0.1" :exclusions [org.apache.zookeeper/zookeeper]]
-                 [org.apache.zookeeper/zookeeper "3.4.12" :exclusions [org.slf4j/slf4j-log4j12]]
+                 [org.apache.zookeeper/zookeeper "3.5.5" :exclusions [org.slf4j/slf4j-log4j12]]
                  [org.slf4j/slf4j-api "1.7.12"]
                  [org.slf4j/slf4j-nop "1.7.12"]
                  [org.btrplace/scheduler-api "0.46"]
