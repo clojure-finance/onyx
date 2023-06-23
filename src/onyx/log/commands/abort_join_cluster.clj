@@ -46,5 +46,5 @@
   (when (= (:id args) (:id state))
     ;; Back off for a randomized time, mean :onyx.peer/join-failure-back-off
     ;; Rename these keys to onyx.node or onyx.peer-group?
-    (Thread/sleep (rand-int (* 2 (arg-or-default :onyx.peer/join-failure-back-off (:opts state))))))
+    (Thread/sleep ^long (rand-int (* 2 (arg-or-default :onyx.peer/join-failure-back-off (:opts state))))))
   state)

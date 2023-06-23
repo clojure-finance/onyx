@@ -1149,7 +1149,7 @@
   [{:keys [onyx.core/kill-flag onyx.core/task-kill-flag onyx.core/opts] :as event} start-fn]
   (while (and (not (or @kill-flag @task-kill-flag))
               (not (start-lifecycle? event start-fn)))
-    (Thread/sleep (arg-or-default :onyx.peer/peer-not-ready-back-off opts))))
+    (Thread/sleep ^long (arg-or-default :onyx.peer/peer-not-ready-back-off opts))))
 
 (defn start-task-lifecycle! [state handle-exception-fn exception-action-fn]
   (thread (run-task-lifecycle! state handle-exception-fn exception-action-fn)))
