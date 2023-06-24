@@ -54,10 +54,10 @@
                  :profiles {:dev {:global-vars {*warn-on-reflection* true}
                                   :dependencies [[org.clojure/tools.nrepl "0.2.11"]
                                                  [org.clojure/java.jmx "0.3.4"]
-                                                 [org.clojure/test.check "0.9.0"]
+                                                 [org.clojure/test.check "1.1.1"]
                                                  [org.senatehouse/expect-call "0.3.0"]
                                                  [mdrogalis/stateful-check "0.3.2"]
-                                                 [lbradstreet/test.chuck "0.2.7-20160709.160608-2"]
+                                                 [com.gfredericks/test.chuck "0.2.14"]
                                                  [joda-time/joda-time "2.8.2"]]
                                   :plugins [[lein-jammin "0.1.1"]
                                             [lein-set-version "0.4.1"]

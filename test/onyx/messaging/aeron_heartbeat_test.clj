@@ -93,10 +93,10 @@
               (is (sub/alive? (m/subscriber downstream1)))
 
               (println "Pub and sub both ready")
-              (Thread/sleep (/ liveness-timeout 2))
+              (Thread/sleep ^long (/ liveness-timeout 2))
               (is (sub/alive? (m/subscriber downstream1)))
               (is (pub/alive? (first (m/publishers upstream1))))
-              (Thread/sleep (+ (/ liveness-timeout 2) 30))
+              (Thread/sleep ^long (+ (/ liveness-timeout 2) 30))
               (is (not (pub/alive? (first (m/publishers upstream1)))))
               (is (not (sub/alive? (m/subscriber downstream1))))
 

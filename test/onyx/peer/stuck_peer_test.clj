@@ -40,7 +40,7 @@
              (< @cnt 10))
     (swap! cnt inc)
     (println "Sleeping for" publisher-liveness-timeout "to cause timeout")
-    (Thread/sleep (+ 10 publisher-liveness-timeout)))
+    (Thread/sleep ^long (+ 10 publisher-liveness-timeout)))
   (assoc segment :n (inc n)))
 
 (deftest stuck-peer-test
