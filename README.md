@@ -1,14 +1,22 @@
 # ![Logo](http://i.imgur.com/zdlOSZD.png?1) Onyx
 
-# BRANCH INFO VERSION: 0.1.0 
-## To use:
+> A fork of onyx-platform/onyx updated to run with JDK-21
+
+### Installation (locally):
 lein install 
 
-## Include in project:
-[org.onyxmod.onyx "0.1.0"]
+### Include in project:
+Available on Clojars
+
+Insert this line into your `project.clj` if using Leiningen.
+
+```
+[com.github.clojure-finance/onyx "0.1.0"]
+```
+
 
 ## Changes made:
-Updated usage of random-uuid (using inbuilt clojure core function only now)
+Updated dependencies and renamed internal components and fixed certain tests
 
 
 [![Join the chat at https://gitter.im/onyx-platform/onyx](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onyx-platform/onyx?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -30,14 +38,6 @@ Updated usage of random-uuid (using inbuilt clojure core function only now)
 - Data transformation à la map-reduce
 - Data ingestion and storage medium transfer
 - Data cleaning
-
-### Installation
-
-Available on Clojars:
-
-```
-[org.onyxplatform/onyx "0.14.6"]
-```
 
 ### Changelog
 

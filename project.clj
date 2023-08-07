@@ -1,6 +1,6 @@
-(defproject org.onyxmod/onyx "0.1.0"
+(defproject comg.github.clojure-finance/onyx "0.1.0"
   :description "Distributed, masterless, high performance, fault tolerant data processing for Clojure"
-  :url "https://github.com/onyx-platform/onyx"
+  :url "https://github.com/thekaranvs/onyx"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :repositories {"snapshots" {:url "https://clojars.org/repo"
@@ -11,6 +11,8 @@
                              :username :env
                              :password :env
                              :sign-releases false}}
+  :deploy-repositories [["releases"  {:sign-releases false :url "https://clojars.org/repo"}]
+                        ["snapshots" {:sign-releases false :url "https://clojars.org/repo"}]]
   :dependencies [[org.clojure/clojure "1.11.0"]
                  [org.clojure/core.async "1.6.673"]
                  ;; lock to 2.9.1 until zookeeper can be upgraded to 3.5
