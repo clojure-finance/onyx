@@ -1,6 +1,6 @@
 (defproject com.github.clojure-finance/onyx "0.1.0"
   :description "Distributed, masterless, high performance, fault tolerant data processing for Clojure"
-  :url "https://github.com/thekaranvs/onyx"
+  :url "https://github.com/clojure-finance/onyx"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :repositories {"snapshots" {:url "https://clojars.org/repo"
