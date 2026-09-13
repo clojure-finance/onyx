@@ -13,7 +13,6 @@
             [onyx.schema :as os]
             [schema.core :as s])
   (:import [org.apache.curator.test TestingServer]
-           [org.apache.log4j BasicConfigurator]
            [org.apache.curator.framework CuratorFramework]
            [org.apache.zookeeper KeeperException$NoNodeException KeeperException$ConnectionLossException
             KeeperException$NodeExistsException KeeperException$BadVersionException]))
@@ -153,7 +152,6 @@
   (start [component]
     (s/validate os/PeerClientConfig config)
     (taoensso.timbre/info "Starting ZooKeeper" (if (:zookeeper/server? config) "server" "client connection. If Onyx hangs here it may indicate a difficulty connecting to ZooKeeper."))
-    (BasicConfigurator/configure)
     (let [onyx-id (:onyx/tenancy-id config)
           server (when (:zookeeper/server? config) (TestingServer. (int (:zookeeper.server/port config))))
           conn (zk/connect (:zookeeper/address config))
