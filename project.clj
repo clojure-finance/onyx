@@ -15,7 +15,6 @@
                         ["snapshots" {:sign-releases false :url "https://clojars.org/repo"}]]
   :dependencies [[org.clojure/clojure "1.11.0"]
                  [org.clojure/core.async "1.6.673"]
-                 ;; lock to 2.9.1 until zookeeper can be upgraded to 3.5
                  [org.apache.curator/curator-test "5.5.0"]
                  [org.apache.curator/curator-framework "5.5.0"]
                  [org.apache.curator/curator-client "5.5.0" :exclusions [org.apache.zookeeper/zookeeper]]
@@ -65,9 +64,7 @@
                                             [codox "0.8.8"]]
                                   :resource-paths ["test-resources/"]}
                             :circle-ci {:global-vars {*warn-on-reflection* true}
-                                        :jvm-opts ["-Xmx2500M"]}
-                            :clojure-1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
-                            :clojure-1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}}
+                                        :jvm-opts ["-Xmx2500M"]}}
                  :test-selectors {:default (fn [t] (if-not (or (:stress t) (:broken t))
                                                      t))
                                   :stress :stress

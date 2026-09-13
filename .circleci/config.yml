@@ -30,7 +30,7 @@ jobs:
 
       - run:
           name: test
-          command: ./scripts/circle-runner.sh aeron clojure-1.8
+          command: ./scripts/circle-runner.sh aeron
 
       - run:
           name: reflection check
