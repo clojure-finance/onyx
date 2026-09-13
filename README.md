@@ -11,7 +11,7 @@ Available on Clojars
 Insert this line into your `project.clj` if using Leiningen.
 
 ```
-[com.github.clojure-finance/onyx "0.2.0"]
+[com.github.clojure-finance/onyx "0.15.0"]
 ```
 
 

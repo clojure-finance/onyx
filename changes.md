@@ -1,7 +1,13 @@
-## 0.2.0 (clojure-finance fork)
+## 0.15.0
+First release of the clojure-finance fork that continues upstream's version
+numbering. Same content as `com.github.clojure-finance/onyx 0.2.0` on Clojars,
+which was published under the fork's earlier numbering; prefer 0.15.0.
 * Upgrade Aeron from 1.21.2 to 1.53.1 and drop the explicit Agrona dependency.
 * JDK 17 or newer is required. Peers need `--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED`;
   the previous `sun.nio.ch` and `java.lang` opens are no longer needed.
+* Remove upstream's CircleCI and unison release tooling.
+* Set the coordination log version to 0.15.0 (it had stayed at 0.14.6-SNAPSHOT,
+  which silently skipped the cluster version compatibility check).
 
 ## 0.14.4
 * Clojure 1.10 fix.
