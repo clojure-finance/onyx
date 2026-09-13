@@ -4,12 +4,12 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :repositories {"snapshots" {:url "https://clojars.org/repo"
-                              :username :env
-                              :password :env
+                              :username :env/clojars_username
+                              :password :env/clojars_password
                               :sign-releases false}
                  "releases" {:url "https://clojars.org/repo"
-                             :username :env
-                             :password :env
+                             :username :env/clojars_username
+                             :password :env/clojars_password
                              :sign-releases false}}
   :deploy-repositories [["releases"  {:sign-releases false :url "https://clojars.org/repo"}]
                         ["snapshots" {:sign-releases false :url "https://clojars.org/repo"}]]
