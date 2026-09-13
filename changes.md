@@ -1,3 +1,10 @@
+## 0.16.0
+* Upgrade ZooKeeper from 3.5.5 (end of life) to 3.9.5 and Curator from 5.5.0 to 5.9.0.
+* ZooKeeper 3.9 no longer depends on log4j 1.x, so the `BasicConfigurator` call in
+  `onyx.log.zookeeper` is gone. ZooKeeper now logs through slf4j like everything else;
+  Onyx ships `slf4j-nop`, so add your own slf4j binding if you want ZooKeeper's logs.
+* slf4j 1.7.12 -> 1.7.36.
+
 ## 0.15.0
 First release of the clojure-finance fork that continues upstream's version
 numbering. Same content as `com.github.clojure-finance/onyx 0.2.0` on Clojars,
