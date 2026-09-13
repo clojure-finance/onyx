@@ -78,31 +78,8 @@ We provide a plugin template for use in building new plugins. This can be found 
 
 To use the supported plugins, please use version coordinates such as
 `[org.onyxplatform/onyx-amazon-sqs "0.14.6.SNAPSHOT.0"]`, and read
-the READMEs on the 0.14.x branches linked above.
+the READMEs on the 0.14.x branches linked in the plugin listing below.
 
-### Build Status
-
-Component | `release`| `unstable`
-----------|--------|----------
-[onyx core](https://github.com/onyx-platform/onyx)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx/tree/master)
-[onyx-local-rt](https://github.com/onyx-platform/onyx-local-rt)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-local-rt/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-local-rt/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-local-rt/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-local-rt/tree/master)
-[onyx-kafka](https://github.com/onyx-platform/onyx-kafka)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-kafka/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-kafka/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-kafka/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-kafka/tree/master)
-[onyx-datomic](https://github.com/onyx-platform/onyx-datomic)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-datomic/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-datomic/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-datomic/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-datomic/tree/master)
-[onyx-redis](https://github.com/onyx-platform/onyx-redis)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-redis/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-redis/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-redis/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-redis/tree/master)
-[onyx-sql](https://github.com/onyx-platform/onyx-sql)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-sql/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-sql/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-sql/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-sql/tree/master)
-[onyx-bookkeeper](https://github.com/onyx-platform/onyx-bookkeeper)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-bookkeeper/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-bookkeeper/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-bookkeeper/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-bookkeeper/tree/master)
-[onyx-amazon-sqs](https://github.com/onyx-platform/onyx-amazon-sqs)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-amazon-sqs/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-amazon-sqs/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-amazon-sqs/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-amazon-sqs/tree/master)
-[onyx-amazon-s3](https://github.com/onyx-platform/onyx-amazon-s3)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-amazon-s3/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-amazon-s3/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-amazon-s3/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-amazon-s3/tree/master)
-[onyx-http](https://github.com/onyx-platform/onyx-http)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-http/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-http/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-http/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-http/tree/master)
-[learn-onyx](https://github.com/onyx-platform/learn-onyx)| [![Circle CI](https://circleci.com/gh/onyx-platform/learn-onyx/tree/answers.svg?style=svg)](https://circleci.com/gh/onyx-platform/learn-onyx/tree/answers) | `-`
-[onyx-examples](https://github.com/onyx-platform/onyx-examples)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-examples/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-examples/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-examples/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-examples/tree/master)
-[onyx-peer-http-query](https://github.com/onyx-platform/onyx-peer-http-query)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-peer-http-query/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-peer-http-query/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-peer-http-query/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-peer-http-query/tree/master)
-[lib-onyx](https://github.com/onyx-platform/lib-onyx)| [![Circle CI](https://circleci.com/gh/onyx-platform/lib-onyx/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/lib-onyx/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/lib-onyx/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/lib-onyx/tree/master)
-[onyx-plugin](https://github.com/onyx-platform/onyx-plugin)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-plugin/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-plugin/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-plugin/tree/master)
-[onyx-template](https://github.com/onyx-platform/onyx-template)| [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-template/tree/0.14.x.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-template/tree/0.14.x) | [![Circle CI](https://circleci.com/gh/onyx-platform/onyx-template/tree/master.svg?style=svg)](https://circleci.com/gh/onyx-platform/onyx-template/tree/master)
-
-- `release`: stable, released content
-- `unstable`: unreleased content
 
 #### Unsupported plugins
 
@@ -140,7 +117,6 @@ Feeling impatient? Hit the ground running ASAP with the [onyx-starter repo](http
 
 - [Branch Policy](doc/developers-guide/branch-policy.md)
 - [Release Checklist](doc/developers-guide/release-checklist.md)
-- [Deployment Process](doc/developers-guide/deployment-process.md)
 
 ### API Docs 0.14.6
 
