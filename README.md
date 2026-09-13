@@ -32,9 +32,8 @@ jdk.internal.misc.Unsafe`. The `sun.nio.ch` and `java.lang` opens that
 earlier versions of this fork needed are no longer required.
 
 ## Changes made:
-Updated dependencies and renamed internal components and fixed certain tests.
-Aeron upgraded from 1.21.2 to 1.53.1 (the separate Agrona pin is gone since
-aeron-all bundles a matching Agrona).
+Updated dependencies (including Aeron 1.53.1), renamed internal components
+and fixed certain tests. See `changes.md` for details per version.
 
 
 [![Join the chat at https://gitter.im/onyx-platform/onyx](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onyx-platform/onyx?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
