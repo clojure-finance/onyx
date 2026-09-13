@@ -15,8 +15,26 @@ Insert this line into your `project.clj` if using Leiningen.
 ```
 
 
+### JVM requirements
+
+This fork runs on JDK 17 or newer (JDK 21 is what it is tested on). It uses
+Aeron 1.53.x, whose bundled Agrona reads `jdk.internal.misc.Unsafe`, so the
+JVM that starts Onyx peers needs this flag:
+
+```
+--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED
+```
+
+With Leiningen put it in `:jvm-opts`; on the command line pass it to `java`
+directly. Without it the embedded media driver fails to start with
+`IllegalAccessError: class org.agrona.UnsafeApi ... cannot access class
+jdk.internal.misc.Unsafe`. The `sun.nio.ch` and `java.lang` opens that
+earlier versions of this fork needed are no longer required.
+
 ## Changes made:
-Updated dependencies and renamed internal components and fixed certain tests
+Updated dependencies and renamed internal components and fixed certain tests.
+Aeron upgraded from 1.21.2 to 1.53.1 (the separate Agrona pin is gone since
+aeron-all bundles a matching Agrona).
 
 
 [![Join the chat at https://gitter.im/onyx-platform/onyx](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onyx-platform/onyx?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)

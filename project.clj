@@ -29,8 +29,7 @@
                  [metrics-clojure "2.10.0"]
                  [com.taoensso/timbre "4.8.0"]
                  [com.taoensso/nippy "2.14.0"]
-                 [io.aeron/aeron-all "1.21.2"]
-                 [org.agrona/agrona "1.18.0"]
+                 [io.aeron/aeron-all "1.53.1"]
                  [io.replikativ/hasch "0.3.4"
                   :exclusions [org.clojure/clojurescript com.cognitect/transit-clj
                                com.cognitect/transit-cljs org.clojure/data.fressian
@@ -51,8 +50,7 @@
                                       "-Xmx2400M"
                                       "-XX:+UseG1GC"
                                       "-XX:-OmitStackTraceInFastThrow"
-                                      "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
-                                       "--add-opens=java.base/java.lang=ALL-UNNAMED"]
+                                      "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"]
                  :profiles {:dev {:global-vars {*warn-on-reflection* true}
                                   :dependencies [[org.clojure/tools.nrepl "0.2.13"]
                                                  [org.clojure/java.jmx "1.0.0"]

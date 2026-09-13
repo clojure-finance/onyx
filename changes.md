@@ -1,3 +1,8 @@
+## 0.2.0 (clojure-finance fork)
+* Upgrade Aeron from 1.21.2 to 1.53.1 and drop the explicit Agrona dependency.
+* JDK 17 or newer is required. Peers need `--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED`;
+  the previous `sun.nio.ch` and `java.lang` opens are no longer needed.
+
 ## 0.14.4
 * Clojure 1.10 fix.
 * Rerelease due to build pipeline failures.
