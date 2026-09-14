@@ -1,203 +1,120 @@
 # ![Logo](http://i.imgur.com/zdlOSZD.png?1) Onyx
 
-> A fork of onyx-platform/onyx updated to run with JDK-21
+**A masterless, fault-tolerant, high-performance distributed computation system for Clojure.**
 
-### Installation (locally):
-lein install 
+This is a community-maintained fork of [onyx-platform/onyx](https://github.com/onyx-platform/onyx) (now archived), updated to run on modern JDKs.
 
-### Include in project:
-Available on Clojars
+[![Clojars](https://img.shields.io/clojars/v/com.github.clojure-finance/onyx.svg)](https://clojars.org/com.github.clojure-finance/onyx)
 
-Insert this line into your `project.clj` if using Leiningen.
+## Installation
 
-```
+Add to your `project.clj`:
+
+```clojure
 [com.github.clojure-finance/onyx "0.16.0"]
 ```
 
+Or install locally:
 
-### JVM requirements
+```bash
+lein install
+```
 
-This fork runs on JDK 17 or newer (JDK 21 is what it is tested on). It uses
-Aeron 1.53.x, whose bundled Agrona reads `jdk.internal.misc.Unsafe`, so the
-JVM that starts Onyx peers needs this flag:
+## JVM Requirements
+
+**JDK 17 or newer** is required (tested on JDK 21). Onyx uses Aeron 1.53.x for messaging, which requires access to internal JVM APIs. Add this flag when starting peers:
 
 ```
 --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED
 ```
 
-With Leiningen put it in `:jvm-opts`; on the command line pass it to `java`
-directly. Without it the embedded media driver fails to start with
-`IllegalAccessError: class org.agrona.UnsafeApi ... cannot access class
-jdk.internal.misc.Unsafe`. The `sun.nio.ch` and `java.lang` opens that
-earlier versions of this fork needed are no longer required.
+In Leiningen, add it to `:jvm-opts`. Without this flag, the embedded media driver fails with:
 
-## Changes made:
-Updated dependencies (including Aeron 1.53.1), renamed internal components
-and fixed certain tests. See `changes.md` for details per version.
+```
+IllegalAccessError: class org.agrona.UnsafeApi ... cannot access class jdk.internal.misc.Unsafe
+```
 
+## What is Onyx?
 
-[![Join the chat at https://gitter.im/onyx-platform/onyx](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/onyx-platform/onyx?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Onyx is a distributed computation system written in pure Clojure. It features:
 
-### What is it?
+- **Masterless architecture** — no single point of failure
+- **Cloud-scale** fault tolerance and high performance
+- **Hybrid batch/stream** processing model
+- **Information model** for describing and constructing distributed workflows
 
-- a masterless, cloud scale, fault tolerant, high performance distributed computation system
-- batch and stream hybrid processing model
-- exposes an information model for the description and construction of distributed workflows
-- Competes against Storm, Flink, Cascading, Cascalog, Spark, Map/Reduce, Sqoop, etc
-- written in pure Clojure
+It competes with Storm, Flink, Spark, Kafka Streams, and similar systems.
 
-### What would I use this for?
+## Use Cases
 
-- Realtime event stream processing
-- CQRS
-- Continuous computation
-- Extract, transform, load
-- Data transformation à la map-reduce
-- Data ingestion and storage medium transfer
-- Data cleaning
+- Real-time event stream processing
+- Continuous computation and CQRS
+- Extract, transform, load (ETL) pipelines
+- Data transformation (map-reduce style)
+- Data ingestion between storage systems
+- Data cleaning and normalization
 
-### Changelog
+## Changes in This Fork
 
-Changelog can be found at [changes.md](changes.md).
+**0.16.0** (Latest)
+- ZooKeeper 3.9.5, Curator 5.9.0, slf4j 1.7.36
+- ZooKeeper now logs via slf4j (add your own binding to see its logs)
 
-### Quick Lookup Doc
+**0.15.0**
+- Aeron upgraded from 1.21.2 to 1.53.1
+- JDK 17+ required (previous `sun.nio.ch` and `java.lang` opens no longer needed)
+- Coordination log version set properly (was stuck at 0.14.6-SNAPSHOT)
 
-A searchable set of documentation for the Onyx data model is [available](http://www.onyxplatform.org/docs/cheat-sheet/latest/).
+See [changes.md](changes.md) for the full changelog including upstream history.
 
-### Project Template
+## Documentation
 
-A project template can be found at [onyx-template](https://github.com/onyx-platform/onyx-template).
+> **Note:** The upstream project is archived, so some external links may be outdated.
 
-### Plugins and Libraries
+- [User Guide](http://www.onyxplatform.org/docs) — comprehensive documentation
+- [API Reference](http://www.onyxplatform.org/docs/api/latest)
+- [Cheat Sheet](http://www.onyxplatform.org/docs/cheat-sheet/latest) — searchable data model reference
+- [Onyx Starter](https://github.com/onyx-platform/onyx-starter) — quick start template with [walkthrough](https://github.com/onyx-platform/onyx-starter/blob/master/WALKTHROUGH.md)
 
-### Plugin Template
+## Plugins
 
-We provide a plugin template for use in building new plugins. This can be found at [onyx-plugin](https://github.com/onyx-platform/onyx-plugin).
-
-#### Plugin Use
-
-To use the supported plugins, please use version coordinates such as
-`[org.onyxplatform/onyx-amazon-sqs "0.14.6.SNAPSHOT.0"]`, and read
-the READMEs on the 0.14.x branches linked in the plugin listing below.
-
-
-#### Unsupported plugins
-
-Some plugins are currently unsupported in onyx 0.14.x. These are:
-
-- [`onyx-durable-queue`](https://github.com/onyx-platform/onyx-durable-queue)
-- [`onyx-elasticsearch`](https://github.com/onyx-platform/onyx-elasticsearch)
-- [`onyx-kafka-0.8`](https://github.com/onyx-platform/onyx-kafka-0.8)
-
-### Companies Running Onyx in Production
-
-[![LockedOn](doc/images/lockedon.png)](https://lockedon.com)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="doc/images/cognician.png" height="30%" width="30%">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="doc/images/indaba.png" height="40%" width="40%">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="doc/images/yapster.png" height="15%" width="15%">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="doc/images/modnakasta.png">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="doc/images/breeze-125.png">
-
-### Quick Start Guide
-
-Feeling impatient? Hit the ground running ASAP with the [onyx-starter repo](https://github.com/onyx-platform/onyx-starter) and [walkthrough](https://github.com/onyx-platform/onyx-starter/blob/master/WALKTHROUGH.md). You can also boot into preloaded a Leiningen [application template](https://github.com/onyx-platform/onyx-template).
-
-### User Guide 0.14.6
-
-- [User Guide Table of Contents](http://www.onyxplatform.org/docs)
-- [API docs](http://www.onyxplatform.org/docs/api/latest)
-- [Cheat Sheet](http://www.onyxplatform.org/docs/cheat-sheet/latest)
-
-### Developer's Guide 0.14.6
-
-- [Branch Policy](doc/developers-guide/branch-policy.md)
-- [Release Checklist](doc/developers-guide/release-checklist.md)
-
-### API Docs 0.14.6
-
-Code level API documentation [can be found here](http://www.onyxplatform.org/docs/api/0.14.6).
-
-### Official plugin listing
-
-Official plugins are vetted by Michael Drogalis. Ensure in your project that plugin versions directly correspond to the same Onyx version (e.g. `onyx-kafka` version `0.14.6.0-SNAPSHOT` goes with `onyx` version `0.14.6`). Fixes to plugins can be applied using a 4th versioning identifier (e.g. `0.14.6.1-SNAPSHOT`).
+The core-async plugin is built in:
 
 - [`onyx-core-async`](doc/user-guide/core-async-plugin.adoc)
+
+Official plugins from upstream (may require updates for this fork):
+
 - [`onyx-kafka`](https://github.com/onyx-platform/onyx-kafka)
-- [`onyx-kafka-0.8`](https://github.com/onyx-platform/onyx-kafka-0.8)
 - [`onyx-datomic`](https://github.com/onyx-platform/onyx-datomic)
 - [`onyx-redis`](https://github.com/onyx-platform/onyx-redis)
 - [`onyx-sql`](https://github.com/onyx-platform/onyx-sql)
-- [`onyx-bookkeeper`](https://github.com/onyx-platform/onyx-bookkeeper)
-- [`onyx-seq`](src/onyx/plugin/seq.cljc)
-- [`onyx-durable-queue`](https://github.com/onyx-platform/onyx-durable-queue)
-- [`onyx-elasticsearch`](https://github.com/onyx-platform/onyx-elasticsearch)
-- [`onyx-http`](https://github.com/onyx-platform/onyx-http)
 - [`onyx-amazon-sqs`](https://github.com/onyx-platform/onyx-amazon-sqs)
 - [`onyx-amazon-s3`](https://github.com/onyx-platform/onyx-amazon-s3)
+- [`onyx-http`](https://github.com/onyx-platform/onyx-http)
 
-Generate plugin templates through Leiningen with [`onyx-plugin`](https://github.com/onyx-platform/onyx-plugin).
+Plugin template for building your own: [`onyx-plugin`](https://github.com/onyx-platform/onyx-plugin)
 
-### 3rd Party plugin listing
+## Running Tests
 
-Unofficial plugins have not been vetted.
-- [`onyx-rethink`](https://github.com/cddr/onyx-rethink)
+```bash
+lein test
+```
 
-### Need help?
+The test suite includes 84 namespaces with 160 tests. Run namespaces one at a time if you encounter issues — embedded ZooKeeper and the Aeron directory under `/dev/shm` can collide across parallel runs.
 
-Check out the [Onyx Google Group](https://groups.google.com/forum/#!forum/onyx-user).
+## Contributors
 
-### Want the logo?
+Originally created by [Michael Drogalis](https://github.com/MichaelDrogalis) with contributions from:
 
-Feel free to use it anywhere. You can find [a few different versions here](https://github.com/onyx-platform/onyx/tree/0.14.x/doc/images/logo).
+Lucas Bradstreet, Owen Jones, Bruce Durling, Malcolm Sparks, Bryce Blanton, David Rupp, Tyler van Hensbergen, David Leatherman, Daniel Compton, Jeff Rose, Ole Krüger, Juho Teperi, Nicolas Ha, Andrew Meredith, Bridget Hillyer, Ivan Mushketyk, Jochen Rau, Tienson Qin, Roman Volosovskyi, Vijay Kiran, Paul Kehrer, Scott Bennett, Nathan Todd.stone, Mariusz Jachimowicz, Jason Bell, and others.
 
-### Running the tests
+## Acknowledgements
 
-A simple `lein test` will run the full suite for Onyx core.
-
-#### Contributor list
-
-- [Michael Drogalis](https://github.com/MichaelDrogalis)
-- [Lucas Bradstreet](https://github.com/lbradstreet)
-- [Owen Jones](https://github.com/owengalenjones)
-- [Bruce Durling](https://github.com/otfrom)
-- [Malcolm Sparks](https://github.com/malcolmsparks)
-- [Bryce Blanton](https://github.com/bblanton)
-- [David Rupp](https://github.com/davidrupp)
-- [sbennett33](https://github.com/sbennett33)
-- [Tyler van Hensbergen](https://github.com/tvanhens)
-- [David Leatherman](https://github.com/leathekd)
-- [Daniel Compton](https://github.com/danielcompton)
-- [Jeff Rose](https://github.com/rosejn)
-- [Ole Krüger](https://github.com/dignati)
-- [Juho Teperi](https://github.com/Deraen)
-- [Nicolas Ha](https://github.com/nha)
-- [Andrew Meredith](https://github.com/kendru)
-- [Bridget Hillyer](https://github.com/bridgethillyer)
-- [Ivan Mushketyk](https://github.com/mushketyk)
-- [Jochen Rau](https://github.com/jocrau)
-- [Tienson Qin](https://github.com/tiensonqin)
-- [Roman Volosovskyi](https://github.com/rasom)
-- [Vijay Kiran](https://github.com/vijaykiran)
-- [Paul Kehrer](https://github.com/reaperhulk)
-- [Scott Bennett](https://github.com/sbennett33)
-- [Nathan Todd.stone](https://github.com/nathants)
-- [Mariusz Jachimowicz](https://github.com/mariusz-jachimowicz-83)
-- [Jason Bell](https://github.com/jasebell)
-
-
-#### Acknowledgements
-
-Some code has been incorporated from the following projects:
-
+Some code incorporated from:
 - [Riemann](https://github.com/aphyr/riemann)
 - [zookeeper-clj](https://github.com/liebke/zookeeper-clj)
 
-### License
+## License
 
 Copyright © 2017 Michael Drogalis
 
