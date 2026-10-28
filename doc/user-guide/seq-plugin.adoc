@@ -51,6 +51,11 @@ the lifecycle.
 
 e.g. `(map (fn [a] {:val a}) ["A" "B" "C"])`
 
+Your lifecycle puts the seq into the event as `:seq/seq`. It may instead put a
+function of no arguments that returns the seq. The plugin then calls it when the
+task starts and again on every recovery, and holds only its position, so segments
+it has read are not kept in memory. Use this for inputs that do not fit in memory.
+
 === Checkpointing
 
 The plugin will checkpoint the state of the read results. In the case of a
@@ -63,13 +68,19 @@ disable checkpointing via `:seq/checkpoint?`.
 
 [source,clojure]
 ----
+;; :seq/seq is a function, so lines that have been read are not kept in memory.
+;; Each call opens the file again; all readers are closed when the task stops.
 (defn inject-in-reader [event lifecycle]
-  (let [rdr (FileReader. (:buffered-reader/filename lifecycle))]
-    {:seq/rdr rdr
-     :seq/seq (line-seq (BufferedReader. rdr))}))
+  (let [readers (atom [])]
+    {:seq/readers readers
+     :seq/seq (fn []
+                (let [rdr (FileReader. (:buffered-reader/filename lifecycle))]
+                  (swap! readers conj rdr)
+                  (map (fn [line] {:line line})
+                       (line-seq (BufferedReader. rdr)))))}))
 
 (defn close-reader [event lifecycle]
-  (.close (:seq/rdr event)))
+  (run! #(.close %) @(:seq/readers event)))
 
 (def in-calls
   {:lifecycle/before-task-start inject-in-reader
@@ -84,3 +95,5 @@ disable checkpointing via `:seq/checkpoint?`.
    {:lifecycle/task :in
     :lifecycle/calls :onyx.plugin.seq/reader-calls}])
 ----
+
+`onyx.tasks.seq/input-file` returns a task map and lifecycle that read a file this way.

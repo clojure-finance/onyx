@@ -13,10 +13,10 @@
   those with :pit/known no later than the left segment's :pit/known (ties
   go to the later :pit/known, so a restatement replaces the original from
   the moment it is known, and then to the later segment), or nil when none
-  was known yet. It emits a left
-  segment only once the join task's watermark has passed its :pit/known,
-  that is, once every right segment that could match has arrived. So no
-  result uses information that was not known at its time.
+  was known yet. It emits a left segment only once the join task's
+  watermark has passed its :pit/known, that is, once every right segment
+  that could match has arrived. So no result uses information that was
+  not known at its time.
 
   Each input must be ordered by :pit/known. A right segment that arrives
   after the join has emitted past its :pit/known would have changed
@@ -39,7 +39,9 @@
 (defn- event-ms [segment]
   (ms (or (:pit/event segment) (:pit/known segment))))
 
-(defn tag [side segment]
+(defn tag
+  "The :onyx/fn of inputs built with `input`."
+  [side segment]
   (assoc segment :pit/side side))
 
 (defn input
