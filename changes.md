@@ -1,4 +1,10 @@
 ## Unreleased
+* Fix lost trigger output: segments that triggers emit when a job completes (such as
+  the final windows) are written after the barrier on which the task seals, and that
+  barrier also announced completion downstream, so downstream tasks could finish and
+  the job be reported complete before they arrived; they were then silently lost
+  (seen: 110 of 3000 windows). A task with triggers now announces completion on the
+  next barrier, which ends such jobs about one barrier period later.
 * `onyx.plugin.seq`: `:seq/seq` may be a function of no arguments that returns the
   segments. The reader then holds only its position, so an input need not fit in memory;
   recovery calls the function again and skips the checkpointed number of segments.

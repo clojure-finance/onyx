@@ -317,14 +317,20 @@
         subscriber (m/subscriber messenger)]
     (if (sub/blocked? subscriber)
       (if (synced? state)
-        (let [{:keys [onyx.core/monitoring]} (get-event state)
-              watermarks (state->watermarks state)]
+        (let [{:keys [onyx.core/monitoring onyx.core/triggers]} (get-event state)
+              watermarks (state->watermarks state)
+              ;; Segments that triggers emit on :job-completed are only written in the
+              ;; next process-batch phase, after this barrier. Announcing completion on
+              ;; this barrier lets downstream tasks finish before they arrive, so a task
+              ;; with triggers announces it on the barrier after the one it seals on.
+              announce-completed? (and (completed? state)
+                                       (or (empty? triggers) (sealed? state)))]
           (.set ^AtomicLong (:workflow-watermark monitoring) (:input watermarks))
           (.set ^AtomicLong (:coordinator-watermark monitoring) (:coordinator watermarks))
           (-> state
               (next-epoch!)
               (try-seal-job!)
-              (set-context! {:barrier-opts {:completed? (completed? state)
+              (set-context! {:barrier-opts {:completed? announce-completed?
                                             :checkpoint? (checkpoint? state)
                                             :watermarks watermarks}
                              :src-peers (sub/src-peers subscriber)

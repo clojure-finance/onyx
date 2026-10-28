@@ -1,6 +1,5 @@
 (ns onyx.replay-test
   (:require [clojure.core.async :refer [chan]]
-            [clojure.set :as set]
             [clojure.test :refer [deftest is testing]]
             [onyx.api]
             [onyx.plugin.core-async :refer [take-segments!]]
@@ -227,8 +226,8 @@
                                        grouped-input)]
     {:key k :window [lower (+ lower 19999)] :state (reduce + (map :v segments))}))
 
-(defn grouped-job []
-  (windowed-job grouped-input 10 ::t-ms
+(defn grouped-job [segments]
+  (windowed-job segments 10 ::t-ms
                 {:onyx/type :reduce
                  :onyx/group-by-key :k
                  :onyx/flux-policy :recover
@@ -239,7 +238,7 @@
                 {}))
 
 (deftest grouped-windows
-  (let [runs (repeatedly 3 #(:out (run (grouped-job) {:parallelism 8})))]
+  (let [runs (repeatedly 3 #(:out (run (grouped-job grouped-input) {:parallelism 8})))]
     (testing "each key's window is emitted once, with its sum"
       (is (= (frequencies grouped-sums) (frequencies (first runs)))))
     (testing "in the same order on every run"
@@ -250,20 +249,18 @@
         config (load-config)
         env-config (assoc (:env-config config) :onyx/tenancy-id id)
         peer-config (assoc (:peer-config config) :onyx/tenancy-id id)
-        replayed (:out (run (grouped-job) {}))
-        job (grouped-job)]
+        ;; Many keys, so that many windows fire at job completion.
+        segments (vec (for [i (range 3000)] {:k (mod i 1000) :t (* 1000 i) :v i}))
+        replayed (:out (run (grouped-job segments) {}))
+        job (grouped-job segments)]
     (reset! out-chan (chan 100000))
     (with-test-env [test-env [3 env-config peer-config]]
       (->> (onyx.api/submit-job peer-config job)
            :job-id
            (feedback-exception! peer-config))
-      ;; Real Onyx sometimes silently drops window results: key 3's last
-      ;; five windows were missing in 4 of 13 runs that followed a run-job
-      ;; run in the same JVM (0 of 8 otherwise), even after waiting 5 s,
-      ;; with nothing logged. Cause not established. So check only that
-      ;; whatever it emits, run-job emits too, once each; grouped-windows
-      ;; checks run-job against sums computed from the input.
-      (let [emitted (take-segments! @out-chan 1000)]
-        (is (seq emitted))
-        (is (= (count emitted) (count (set emitted))))
-        (is (set/subset? (set emitted) (set replayed)))))))
+      ;; Before the fix in onyx.peer.task-lifecycle (completion announced on
+      ;; the barrier after sealing), Onyx sometimes lost the tail of what
+      ;; triggers emitted at job completion.
+      (is (= 3000 (count replayed)))
+      (is (= (frequencies replayed)
+             (frequencies (take-segments! @out-chan 1000)))))))
