@@ -1,4 +1,6 @@
-## Unreleased
+## 0.17.0
+* The coordination log version is now 0.17.0, so 0.16.0 and 0.17.0 peers refuse to
+  share a tenancy. Use a new `:onyx/tenancy-id` when upgrading.
 * Fix lost trigger output: segments that triggers emit when a job completes (such as
   the final windows) are written after the barrier on which the task seals, and that
   barrier also announced completion downstream, so downstream tasks could finish and

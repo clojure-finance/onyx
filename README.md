@@ -11,7 +11,7 @@ This is a community-maintained fork of [onyx-platform/onyx](https://github.com/o
 Add to your `project.clj`:
 
 ```clojure
-[com.github.clojure-finance/onyx "0.16.0"]
+[com.github.clojure-finance/onyx "0.17.0"]
 ```
 
 Clojars also lists 0.1.0 and 0.2.0 from the fork's earlier version scheme. 0.2.0 has the same content as 0.15.0; prefer 0.15.0 or later.
@@ -60,7 +60,13 @@ It occupies the same space as Storm, Flink, Spark and similar systems.
 
 ## Changes in This Fork
 
-**0.16.0** (Latest)
+**0.17.0** (Latest)
+- Fix: segments that triggers emit when a job completes (such as the final windows) could be lost without an error, because completion was announced downstream before they were written. A task with triggers now announces completion one barrier later.
+- `onyx.plugin.seq` accepts a function for `:seq/seq`, so a large input need not fit in memory; `onyx.tasks.seq/input-file` uses this and now honours its task name
+- Experimental `onyx.replay` (in-process runtime) and `onyx.pit` (point-in-time as-of joins), see below
+- The coordination log version is now `0.17.0`. Use a new `:onyx/tenancy-id` when upgrading.
+
+**0.16.0**
 - ZooKeeper 3.9.5, Curator 5.9.0, slf4j 1.7.36
 - ZooKeeper now logs via slf4j. Onyx ships `slf4j-nop`, so add your own binding to see its logs.
 
@@ -74,6 +80,44 @@ It occupies the same space as Storm, Flink, Spark and similar systems.
 - `onyx.static.uuid/random-uuid` renamed to `onyx-random-uuid` to avoid clashing with `clojure.core/random-uuid` (Clojure 1.11)
 
 See [changes.md](changes.md) for the full changelog including upstream history.
+
+## Experimental: In-Process Runtime and Point-in-Time Joins
+
+Added in 0.17.0. These namespaces may change in later releases.
+
+**`onyx.replay`** runs a job map, the same one you would pass to `onyx.api/submit-job`, inside the calling JVM: no ZooKeeper, no Aeron, no JVM flags.
+
+```clojure
+(require '[onyx.replay :as replay])
+
+(replay/run-job job {:parallelism 4})
+;; => {:segments {:in 1000, :inc 1000, :out 1000}}  ; segments each task emitted
+```
+
+- It blocks until every input is exhausted and every output has written everything.
+- Output order is deterministic: task functions run on a thread pool, but results are emitted in input order.
+- It supports plugins, task functions, `:lifecycle/before-task-start` and `:lifecycle/after-task-stop`, windows, triggers, group-by and watermarks. Watermarks travel with the batches, so watermark triggers fire at the same point in the data on every run.
+- It rejects flow conditions, Java tasks and other lifecycle phases. There is no checkpointing: an exception fails the run.
+
+**`onyx.pit`** builds point-in-time as-of joins from windows, triggers and refinements, so they run in `onyx.replay` and on a cluster. Segments carry `:pit/known`, the time their information became available (a filing date, say); right-hand segments may also carry `:pit/event`, the time it is about (a fiscal period end). Each left segment comes out with `:pit/as-of` set to the right segment with the same key and the latest `:pit/event` among those known by the left segment's `:pit/known`, or `nil` if none was.
+
+```clojure
+(require '[onyx.pit :as pit])
+
+(let [{:keys [catalog-entry window trigger]} (pit/as-of-join :join :tic 100)]
+  (pit/check-job
+   {:workflow [[:prices :join] [:filings :join] [:join :out]]
+    :catalog [(pit/input prices-task :left)
+              (pit/input filings-task :right)
+              catalog-entry
+              out-task]
+    :windows [window]
+    :triggers [trigger]
+    :lifecycles lifecycles
+    :task-scheduler :onyx.task-scheduler/balanced}))
+```
+
+Each input must be ordered by `:pit/known`; a right segment that arrives after results it would have changed have been emitted makes the join throw. See the `onyx.pit` docstring for the exact rules.
 
 ## Documentation
 
