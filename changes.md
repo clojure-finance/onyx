@@ -1,4 +1,7 @@
-## Unreleased
+## 0.17.2
+* The coordination log version is now 0.17.2. Use a new `:onyx/tenancy-id` when
+  upgrading; a 0.17.2 coordinator would wait forever for older peers to report
+  that they have sealed.
 * Fix lost trigger output between windowed tasks. A windowed task after another one
   sealed on the same barrier as it, so its `:job-completed` triggers fired before the
   segments the first task's triggers emitted on `:job-completed` arrived, and those

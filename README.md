@@ -11,7 +11,7 @@ This is a community-maintained fork of [onyx-platform/onyx](https://github.com/o
 Add to your `project.clj`:
 
 ```clojure
-[com.github.clojure-finance/onyx "0.17.1"]
+[com.github.clojure-finance/onyx "0.17.2"]
 ```
 
 Clojars also lists 0.1.0 and 0.2.0 from the fork's earlier version scheme. 0.2.0 has the same content as 0.15.0; prefer 0.15.0 or later.
@@ -60,7 +60,11 @@ It occupies the same space as Storm, Flink, Spark and similar systems.
 
 ## Changes in This Fork
 
-**0.17.1** (Latest)
+**0.17.2** (Latest)
+- Fix: a windowed task after another windowed task never included what the first one's triggers emitted when the job completed in its own end-of-job results. A task with triggers now passes completion on one barrier after it seals, and the coordinator completes the job only once every task has sealed.
+- The coordination log version is now `0.17.2`. Use a new `:onyx/tenancy-id` when upgrading.
+
+**0.17.1**
 - Fix: segments that triggers emit when a job completes (such as the final windows) could be lost without an error. The coordinator now completes a job only after one more barrier has gone through, which each task passes on only after writing them.
 - Reverts the change 0.17.0 made for this, which did not prevent the loss and kept the tasks after a task with triggers from sealing
 - The coordination log version is now `0.17.1`. Use a new `:onyx/tenancy-id` when upgrading.

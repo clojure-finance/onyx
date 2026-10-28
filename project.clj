@@ -1,4 +1,4 @@
-(defproject com.github.clojure-finance/onyx "0.17.1"
+(defproject com.github.clojure-finance/onyx "0.17.2"
   :description "Distributed, masterless, high performance, fault tolerant data processing for Clojure"
   :url "https://github.com/clojure-finance/onyx"
   :license {:name "Eclipse Public License"
