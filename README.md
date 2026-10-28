@@ -11,7 +11,7 @@ This is a community-maintained fork of [onyx-platform/onyx](https://github.com/o
 Add to your `project.clj`:
 
 ```clojure
-[com.github.clojure-finance/onyx "0.17.0"]
+[com.github.clojure-finance/onyx "0.17.1"]
 ```
 
 Clojars also lists 0.1.0 and 0.2.0 from the fork's earlier version scheme. 0.2.0 has the same content as 0.15.0; prefer 0.15.0 or later.
@@ -60,8 +60,12 @@ It occupies the same space as Storm, Flink, Spark and similar systems.
 
 ## Changes in This Fork
 
-**0.17.0** (Latest)
-- Fix: segments that triggers emit when a job completes (such as the final windows) could be lost without an error, because completion was announced downstream before they were written. A task with triggers now announces completion one barrier later.
+**0.17.1** (Latest)
+- Fix: segments that triggers emit when a job completes (such as the final windows) could be lost without an error. The coordinator now completes a job only after one more barrier has gone through, which each task passes on only after writing them.
+- Reverts the change 0.17.0 made for this, which did not prevent the loss and kept the tasks after a task with triggers from sealing
+- The coordination log version is now `0.17.1`. Use a new `:onyx/tenancy-id` when upgrading.
+
+**0.17.0**
 - `onyx.plugin.seq` accepts a function for `:seq/seq`, so a large input need not fit in memory; `onyx.tasks.seq/input-file` uses this and now honours its task name
 - Experimental `onyx.replay` (in-process runtime) and `onyx.pit` (point-in-time as-of joins), see below
 - The coordination log version is now `0.17.0`. Use a new `:onyx/tenancy-id` when upgrading.

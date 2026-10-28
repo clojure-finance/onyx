@@ -1,4 +1,4 @@
-(defproject com.github.clojure-finance/onyx "0.17.0"
+(defproject com.github.clojure-finance/onyx "0.17.1"
   :description "Distributed, masterless, high performance, fault tolerant data processing for Clojure"
   :url "https://github.com/clojure-finance/onyx"
   :license {:name "Eclipse Public License"
@@ -49,7 +49,8 @@
                                       "-Xmx2400M"
                                       "-XX:+UseG1GC"
                                       "-XX:-OmitStackTraceInFastThrow"
-                                      "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"]
+                                      "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"
+                                      "--enable-native-access=ALL-UNNAMED"]
                  :profiles {:dev {:global-vars {*warn-on-reflection* true}
                                   :dependencies [[org.clojure/tools.nrepl "0.2.13"]
                                                  [org.clojure/java.jmx "1.0.0"]

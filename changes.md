@@ -1,4 +1,6 @@
-## Unreleased
+## 0.17.1
+* The coordination log version is now 0.17.1. Use a new `:onyx/tenancy-id` when
+  upgrading.
 * Fix lost trigger output. Segments that triggers emit when a job completes (such as
   the final windows) are written after the task passes the sealing barrier on, and the
   coordinator completed the job as soon as every peer had passed that barrier, so they
@@ -21,7 +23,7 @@
   the job be reported complete before they arrived; they were then silently lost
   (seen: 110 of 3000 windows). A task with triggers now announces completion on the
   next barrier, which ends such jobs about one barrier period later. (This did not
-  prevent the loss; see Unreleased.)
+  prevent the loss; see 0.17.1.)
 * `onyx.plugin.seq`: `:seq/seq` may be a function of no arguments that returns the
   segments. The reader then holds only its position, so an input need not fit in memory;
   recovery calls the function again and skips the checkpointed number of segments.
