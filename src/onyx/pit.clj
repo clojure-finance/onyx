@@ -12,7 +12,8 @@
   segment with the same join key that has the latest :pit/event among
   those with :pit/known no later than the left segment's :pit/known (ties
   go to the later :pit/known, so a restatement replaces the original from
-  the moment it is known), or nil when none was known yet. It emits a left
+  the moment it is known, and then to the later segment), or nil when none
+  was known yet. It emits a left
   segment only once the join task's watermark has passed its :pit/known,
   that is, once every right segment that could match has arrived. So no
   result uses information that was not known at its time.
@@ -60,8 +61,8 @@
   (reduce (fn [best right]
             (if (and (<= (known-ms right) t)
                      (or (nil? best)
-                         (pos? (compare [(event-ms right) (known-ms right)]
-                                        [(event-ms best) (known-ms best)]))))
+                         (not (neg? (compare [(event-ms right) (known-ms right)]
+                                             [(event-ms best) (known-ms best)])))))
               right
               best))
           nil

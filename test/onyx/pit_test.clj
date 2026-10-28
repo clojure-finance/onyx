@@ -1,6 +1,9 @@
 (ns onyx.pit-test
   (:require [clojure.core.async :refer [chan]]
             [clojure.test :refer [deftest is testing]]
+            [clojure.test.check.clojure-test :refer [defspec]]
+            [clojure.test.check.generators :as gen]
+            [clojure.test.check.properties :as prop]
             [onyx.api]
             [onyx.pit :as pit]
             [onyx.plugin.core-async :refer [take-segments!]]
@@ -138,3 +141,32 @@
            :job-id
            (feedback-exception! peer-config))
       (is (= (set replayed) (set (take-segments! @out-chan 1000)))))))
+
+(def gen-case
+  (gen/let [tics (gen/elements [["A"] ["A" "B"] ["A" "B" "C"]])
+            prices (gen/vector (gen/tuple (gen/elements tics) (gen/choose 0 40)) 0 25)
+            fundamentals (gen/vector (gen/tuple (gen/elements tics) (gen/choose 0 40) (gen/choose 0 40)) 0 15)
+            batch-size (gen/choose 1 6)]
+    {:prices (vec (sort-by :pit/known (map-indexed (fn [i [tic known]]
+                                                     {:tic tic :close (double i) :pit/known known})
+                                                   prices)))
+     :fundamentals (vec (sort-by :pit/known (map-indexed (fn [i [tic event known]]
+                                                           {:tic tic :id i :pit/event event :pit/known known})
+                                                         fundamentals)))
+     :batch-size batch-size}))
+
+(defn reference-join
+  "Each price with the latest-period fundamentals filed by its time, by brute force."
+  [{:keys [prices fundamentals]}]
+  (for [{:keys [tic] :as price} prices]
+    (assoc price :pit/as-of (->> fundamentals
+                                 (filter #(and (= tic (:tic %)) (<= (:pit/known %) (:pit/known price))))
+                                 (sort-by (juxt :pit/event :pit/known))
+                                 last))))
+
+(defspec as-of-join-matches-brute-force 100
+  (prop/for-all [{:keys [batch-size] :as case} gen-case]
+    (reset! inputs case)
+    (let [joined (run (job batch-size))]
+      (and (= (count (:prices case)) (count joined))
+           (= (set (reference-join case)) (set joined))))))
