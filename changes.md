@@ -8,6 +8,9 @@
 * `onyx.plugin.seq`: `:seq/seq` may be a function of no arguments that returns the
   segments. The reader then holds only its position, so an input need not fit in memory;
   recovery calls the function again and skips the checkpointed number of segments.
+* `onyx.tasks.seq/input-file`: the lifecycle now targets the given task name (it was
+  hardcoded to `:in`), and the file is read through a function, so it is not held in
+  memory; every reader opened is closed when the task stops.
 * Experimental `onyx.replay/run-job`: runs a job map in the calling JVM without ZooKeeper,
   Aeron or JVM flags, with deterministic output order. Supports windows, triggers,
   group-by and watermarks (carried with batches, so watermark triggers fire at the same
