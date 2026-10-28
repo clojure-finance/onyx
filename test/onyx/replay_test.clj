@@ -258,9 +258,6 @@
       (->> (onyx.api/submit-job peer-config job)
            :job-id
            (feedback-exception! peer-config))
-      ;; Before the fix in onyx.peer.task-lifecycle (completion announced on
-      ;; the barrier after sealing), Onyx sometimes lost the tail of what
-      ;; triggers emitted at job completion.
       (is (= 3000 (count replayed)))
       (is (= (frequencies replayed)
              (frequencies (take-segments! @out-chan 1000)))))))

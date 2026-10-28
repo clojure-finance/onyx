@@ -1,3 +1,17 @@
+## Unreleased
+* Fix lost trigger output. Segments that triggers emit when a job completes (such as
+  the final windows) are written after the task passes the sealing barrier on, and the
+  coordinator completed the job as soon as every peer had passed that barrier, so they
+  could still be in flight and were then silently lost: 0.16.0 lost 26-74% of 15000
+  windows in each of 8 runs. The coordinator now completes a job only after one more
+  barrier has gone through, which each task passes on only after writing those
+  segments (0 of 8 runs lost any). Regression test:
+  `onyx.windowing.job-completed-emit-test`.
+* Revert the 0.17.0 change to `onyx.peer.task-lifecycle`: it did not prevent the loss,
+  and since a task with triggers no longer passed `:completed?` on the sealing barrier,
+  the tasks after it never sealed, so their output plugins missed the final
+  `checkpointed!` call.
+
 ## 0.17.0
 * The coordination log version is now 0.17.0, so 0.16.0 and 0.17.0 peers refuse to
   share a tenancy. Use a new `:onyx/tenancy-id` when upgrading.
@@ -6,7 +20,8 @@
   barrier also announced completion downstream, so downstream tasks could finish and
   the job be reported complete before they arrived; they were then silently lost
   (seen: 110 of 3000 windows). A task with triggers now announces completion on the
-  next barrier, which ends such jobs about one barrier period later.
+  next barrier, which ends such jobs about one barrier period later. (This did not
+  prevent the loss; see Unreleased.)
 * `onyx.plugin.seq`: `:seq/seq` may be a function of no arguments that returns the
   segments. The reader then holds only its position, so an input need not fit in memory;
   recovery calls the function again and skips the checkpointed number of segments.

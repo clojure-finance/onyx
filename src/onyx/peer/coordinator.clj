@@ -98,7 +98,8 @@
             coordinates (read-checkpoint-coordinate log tenancy-id job-id)]
         (-> state
             (update :job merge {:completed? false
-                                :sealing? false})
+                                :sealing? false
+                                :flushed? false})
             (update :barrier merge {:scheduled? false
                                     :offering? true
                                     :remaining (m/publishers new-messenger)
@@ -271,7 +272,15 @@
           (offer-barriers state)
 
           (and sealing? (checkpoint-complete? checkpoint status))
-          (complete-job state)
+          (if (:flushed? job)
+            (complete-job state)
+            ;; A task writes what its triggers emit on sealing only after it
+            ;; has passed the sealing barrier on, so those segments can still
+            ;; be in flight. It writes them before passing on the next barrier,
+            ;; so complete the job only once one more barrier has gone through.
+            (-> state
+                (assoc-in [:job :flushed?] true)
+                (periodic-barrier)))
 
           (or completed?
               sealing?
