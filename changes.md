@@ -1,3 +1,14 @@
+## Unreleased
+* `onyx.plugin.seq`: `:seq/seq` may be a function of no arguments that returns the
+  segments. The reader then holds only its position, so an input need not fit in memory;
+  recovery calls the function again and skips the checkpointed number of segments.
+* Experimental `onyx.replay/run-job`: runs a job map in the calling JVM without ZooKeeper,
+  Aeron or JVM flags, with deterministic output order. Supports windows, triggers,
+  group-by and watermarks (carried with batches, so watermark triggers fire at the same
+  point in the data on every run); rejects flow conditions and Java tasks; no checkpointing.
+* Experimental `onyx.pit`: point-in-time as-of joins built from windows, triggers and
+  refinements, so they run in `onyx.replay` and on a cluster.
+
 ## 0.16.0
 * Upgrade ZooKeeper from 3.5.5 (end of life) to 3.9.5 and Curator from 5.5.0 to 5.9.0.
 * ZooKeeper 3.9 no longer depends on log4j 1.x, so the `BasicConfigurator` call in
