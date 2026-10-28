@@ -1,3 +1,13 @@
+## Unreleased
+* Fix lost trigger output between windowed tasks. A windowed task after another one
+  sealed on the same barrier as it, so its `:job-completed` triggers fired before the
+  segments the first task's triggers emitted on `:job-completed` arrived, and those
+  were never part of its results (seen: none of 150 windows). A task with triggers
+  now passes completion on one barrier after it seals, peers report whether they and
+  every peer after them have sealed, and the coordinator sends barriers until all
+  have, plus one more, before it completes the job. Regression test:
+  `onyx.windowing.chained-job-completed-test`.
+
 ## 0.17.1
 * The coordination log version is now 0.17.1. Use a new `:onyx/tenancy-id` when
   upgrading.

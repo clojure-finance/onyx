@@ -274,13 +274,15 @@
           (and sealing? (checkpoint-complete? checkpoint status))
           (if (:flushed? job)
             (complete-job state)
-            ;; A task writes what its triggers emit on sealing only after it
-            ;; has passed the sealing barrier on, so those segments can still
-            ;; be in flight. It writes them before passing on the next barrier,
-            ;; so complete the job only once one more barrier has gone through.
-            (-> state
-                (assoc-in [:job :flushed?] true)
-                (periodic-barrier)))
+            ;; A task with triggers passes completion on one barrier after it
+            ;; seals, so the tasks after it seal on later barriers; keep
+            ;; sending them until every peer has sealed. A task writes what its
+            ;; triggers emit on sealing only after it has passed that barrier
+            ;; on, and before it passes on the next one, so complete the job
+            ;; only once one more barrier has gone through.
+            (cond-> state
+              (:sealed? status) (assoc-in [:job :flushed?] true)
+              true (periodic-barrier)))
 
           (or completed?
               sealing?

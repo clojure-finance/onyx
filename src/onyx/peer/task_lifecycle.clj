@@ -188,7 +188,8 @@
                :checkpointing? (not (cp/complete? (:onyx.core/storage (get-event state))))
                :epoch (t/epoch state)
                :heartbeat (System/nanoTime)
-               :min-epoch (t/epoch state)}])
+               :min-epoch (t/epoch state)
+               :sealed? (sealed? state)}])
        status/merge-statuses))
 
 (defn input-poll-barriers [state]
@@ -317,14 +318,21 @@
         subscriber (m/subscriber messenger)]
     (if (sub/blocked? subscriber)
       (if (synced? state)
-        (let [{:keys [onyx.core/monitoring]} (get-event state)
-              watermarks (state->watermarks state)]
+        (let [{:keys [onyx.core/monitoring] :as event} (get-event state)
+              watermarks (state->watermarks state)
+              ;; What triggers emit on :job-completed is written after the barrier
+              ;; on which the task seals, so a task with triggers announces
+              ;; completion on the next one: a windowed task downstream must not
+              ;; seal, and fire its own :job-completed triggers, before it arrives.
+              announce-completed? (and (completed? state)
+                                       (or (not (triggered-task? event))
+                                           (sealed? state)))]
           (.set ^AtomicLong (:workflow-watermark monitoring) (:input watermarks))
           (.set ^AtomicLong (:coordinator-watermark monitoring) (:coordinator watermarks))
           (-> state
               (next-epoch!)
               (try-seal-job!)
-              (set-context! {:barrier-opts {:completed? (completed? state)
+              (set-context! {:barrier-opts {:completed? announce-completed?
                                             :checkpoint? (checkpoint? state)
                                             :watermarks watermarks}
                              :src-peers (sub/src-peers subscriber)
@@ -372,6 +380,7 @@
   (let [status (merge-statuses state)]
     {:checkpointing? (:checkpointing? status)
      :min-epoch (:min-epoch status)
+     :sealed? (:sealed? status)
      :drained? (and (or (nil? (get-input-pipeline state)) 
                         (p/completed? (get-input-pipeline state)))
                     (or (nil? (get-output-pipeline state)) 

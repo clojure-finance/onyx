@@ -50,6 +50,7 @@
    :epoch epoch 
    :checkpointing? (:checkpointing? opts-map)
    :drained? (drained? opts-map) 
+   :sealed? (boolean (:sealed? opts-map))
    :min-epoch (:min-epoch opts-map)
    :heartbeat (System/nanoTime)})
 

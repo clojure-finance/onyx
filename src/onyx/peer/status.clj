@@ -8,6 +8,7 @@
   (reduce (fn [c s]
             {:ready? (and (:ready? s) (:ready? c))
              :drained? (and (:drained? s) (:drained? c))
+             :sealed? (and (:sealed? s) (:sealed? c))
              :replica-version (if-let [rvs (seq (keep :replica-version [c s]))]
                                 (apply min rvs)
                                 -1)
