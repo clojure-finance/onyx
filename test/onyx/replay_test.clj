@@ -1,5 +1,6 @@
 (ns onyx.replay-test
   (:require [clojure.core.async :refer [chan]]
+            [clojure.set :as set]
             [clojure.test :refer [deftest is testing]]
             [onyx.api]
             [onyx.plugin.core-async :refer [take-segments!]]
@@ -127,4 +128,142 @@
            :job-id
            (feedback-exception! peer-config))
       (is (= (frequencies replayed)
-             (frequencies (take-segments! @out-chan 50)))))))
+             (frequencies (take-segments! @out-chan 1000)))))))
+
+(def input (atom nil))
+
+(def inject-input
+  {:lifecycle/before-task-start (fn [_ _] {:seq/seq @input})})
+
+(defn event-time-ms [{:keys [event-time]}]
+  (.getTime ^java.util.Date event-time))
+
+(defn t-ms [{:keys [t]}]
+  t)
+
+(defn emit-window [_ _ _ {:keys [lower-bound upper-bound group-key]} extent-state]
+  (cond-> {:window [lower-bound upper-bound] :state extent-state}
+    group-key (assoc :key group-key)))
+
+(defn windowed-job [segments batch-size watermark-fn window-task window trigger]
+  (reset! input segments)
+  {:workflow [[:in :window] [:window :out]]
+   :catalog [{:onyx/name :in
+              :onyx/plugin :onyx.plugin.seq/input
+              :onyx/type :input
+              :onyx/medium :seq
+              :onyx/assign-watermark-fn watermark-fn
+              :onyx/batch-size batch-size
+              :onyx/max-peers 1}
+             (merge {:onyx/name :window :onyx/batch-size batch-size} window-task)
+             {:onyx/name :out
+              :onyx/plugin :onyx.plugin.core-async/output
+              :onyx/type :output
+              :onyx/medium :core.async
+              :onyx/batch-size batch-size
+              :onyx/max-peers 1}]
+   :lifecycles [{:lifecycle/task :in :lifecycle/calls ::inject-input}
+                {:lifecycle/task :out :lifecycle/calls ::out-calls}]
+   :windows [(merge {:window/id :w :window/task :window :window/type :fixed} window)]
+   :triggers [(merge {:trigger/window-id :w
+                      :trigger/id :emit
+                      :trigger/on :onyx.triggers/watermark
+                      :trigger/post-evictor [:all]
+                      :trigger/state-context [:window-state]
+                      :trigger/emit ::emit-window}
+                     trigger)]
+   :task-scheduler :onyx.task-scheduler/balanced})
+
+(def watermark-input
+  [{:id 1 :event-time #inst "2015-09-13T03:00:00.829-00:00"}
+   {:id 11 :event-time #inst "2015-09-13T03:03:00.829-00:00"}
+   {:id 2 :event-time #inst "2015-09-13T03:04:00.829-00:00"}
+   {:id 3 :event-time #inst "2015-09-13T03:05:00.829-00:00"}
+   {:id 4 :event-time #inst "2015-09-13T03:06:00.829-00:00"}
+   {:id 5 :event-time #inst "2015-09-13T03:07:00.829-00:00"}
+   {:id 6 :event-time #inst "2015-09-13T03:08:00.829-00:00"}
+   {:id 7 :event-time #inst "2015-09-13T03:09:00.829-00:00"}
+   {:id 8 :event-time #inst "2015-09-13T03:15:00.829-00:00"}
+   {:id 15 :event-time #inst "2015-09-13T03:16:00.829-00:00"}
+   {:id 9 :event-time #inst "2015-09-13T03:25:00.829-00:00"}
+   {:id 14 :event-time #inst "2015-09-13T03:32:00.829-00:00"}
+   {:id 10 :event-time #inst "2015-09-13T03:45:00.829-00:00"}
+   {:id 12 :event-time #inst "2015-09-13T03:56:00.829-00:00"}
+   {:id 13 :event-time #inst "2015-09-13T03:59:00.829-00:00"}])
+
+(deftest watermark-trigger-fires-at-the-same-point-every-run
+  ;; Port of onyx.windowing.window-watermark-test, which upstream disabled
+  ;; as brittle: there, watermarks reach the task on timed barriers.
+  (let [job (fn [batch-size]
+              (windowed-job watermark-input batch-size ::event-time-ms
+                            {:onyx/type :function :onyx/fn :clojure.core/identity}
+                            {:window/aggregation :onyx.windowing.aggregation/count
+                             :window/window-key :event-time
+                             :window/range [5 :minutes]}
+                            {}))
+        w (fn [lower n] {:window [lower (+ lower 299999)] :state n})
+        windows [(w 1442113200000 3) (w 1442113500000 5) (w 1442114100000 2)
+                 (w 1442114700000 1) (w 1442115000000 1) (w 1442115900000 1)
+                 (w 1442116500000 2)]
+        in (fn [from to] (subvec watermark-input from to))]
+    (testing "one segment per batch: each window comes right after the segment whose watermark closed it, the last at job completion"
+      (is (= (concat (in 0 4) [(windows 0)]
+                     (in 4 9) [(windows 1)]
+                     (in 9 11) [(windows 2)]
+                     (in 11 12) [(windows 3)]
+                     (in 12 13) [(windows 4)]
+                     (in 13 14) [(windows 5)]
+                     (in 14 15) [(windows 6)])
+             (:out (run (job 1) {:parallelism 4})))))
+    (testing "any batch size: the same windows in the same order"
+      (doseq [batch-size [2 5 20]]
+        (is (= windows (filter :window (:out (run (job batch-size) {:parallelism 4})))))))))
+
+(def grouped-input
+  (vec (for [i (range 300)] {:k (mod (* 7 i) 5) :t (* 1000 i) :v i})))
+
+(def grouped-sums
+  (for [[[k lower] segments] (group-by (fn [{:keys [k t]}] [k (* 20000 (quot t 20000))])
+                                       grouped-input)]
+    {:key k :window [lower (+ lower 19999)] :state (reduce + (map :v segments))}))
+
+(defn grouped-job []
+  (windowed-job grouped-input 10 ::t-ms
+                {:onyx/type :reduce
+                 :onyx/group-by-key :k
+                 :onyx/flux-policy :recover
+                 :onyx/n-peers 1}
+                {:window/aggregation [:onyx.windowing.aggregation/sum :v]
+                 :window/window-key :t
+                 :window/range [20 :seconds]}
+                {}))
+
+(deftest grouped-windows
+  (let [runs (repeatedly 3 #(:out (run (grouped-job) {:parallelism 8})))]
+    (testing "each key's window is emitted once, with its sum"
+      (is (= (frequencies grouped-sums) (frequencies (first runs)))))
+    (testing "in the same order on every run"
+      (is (apply = runs)))))
+
+(deftest same-windows-as-onyx
+  (let [id (java.util.UUID/randomUUID)
+        config (load-config)
+        env-config (assoc (:env-config config) :onyx/tenancy-id id)
+        peer-config (assoc (:peer-config config) :onyx/tenancy-id id)
+        replayed (:out (run (grouped-job) {}))
+        job (grouped-job)]
+    (reset! out-chan (chan 100000))
+    (with-test-env [test-env [3 env-config peer-config]]
+      (->> (onyx.api/submit-job peer-config job)
+           :job-id
+           (feedback-exception! peer-config))
+      ;; Real Onyx sometimes silently drops window results: key 3's last
+      ;; five windows were missing in 4 of 13 runs that followed a run-job
+      ;; run in the same JVM (0 of 8 otherwise), even after waiting 5 s,
+      ;; with nothing logged. Cause not established. So check only that
+      ;; whatever it emits, run-job emits too, once each; grouped-windows
+      ;; checks run-job against sums computed from the input.
+      (let [emitted (take-segments! @out-chan 1000)]
+        (is (seq emitted))
+        (is (= (count emitted) (count (set emitted))))
+        (is (set/subset? (set emitted) (set replayed)))))))
