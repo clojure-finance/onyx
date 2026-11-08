@@ -1,0 +1,100 @@
+{:paths ["src" "resources"]
+
+ :deps {org.clojure/clojure {:mvn/version "1.11.0"}
+        org.clojure/core.async {:mvn/version "1.6.673"}
+        org.apache.curator/curator-test {:mvn/version "5.9.0"}
+        org.apache.curator/curator-framework {:mvn/version "5.9.0"}
+        org.apache.curator/curator-client {:mvn/version "5.9.0"
+                                           :exclusions [org.apache.zookeeper/zookeeper]}
+        org.apache.zookeeper/zookeeper {:mvn/version "3.9.5"}
+        org.slf4j/slf4j-api {:mvn/version "1.7.36"}
+        org.slf4j/slf4j-nop {:mvn/version "1.7.36"}
+        org.btrplace/scheduler-api {:mvn/version "0.46"}
+        org.btrplace/scheduler-choco {:mvn/version "0.46"}
+        com.stuartsierra/dependency {:mvn/version "1.0.0"}
+        com.stuartsierra/component {:mvn/version "1.1.0"}
+        metrics-clojure/metrics-clojure {:mvn/version "2.10.0"}
+        com.taoensso/timbre {:mvn/version "4.8.0"}
+        com.taoensso/nippy {:mvn/version "2.14.0"}
+        io.aeron/aeron-all {:mvn/version "1.53.1"}
+        io.replikativ/hasch {:mvn/version "0.3.4"
+                             :exclusions [org.clojure/clojurescript
+                                          com.cognitect/transit-clj
+                                          com.cognitect/transit-cljs
+                                          org.clojure/data.fressian
+                                          com.cemerick/austin]}
+        prismatic/schema {:mvn/version "1.4.1"}
+        com.amazonaws/aws-java-sdk-s3 {:mvn/version "1.11.271"}
+        primitive-math/primitive-math {:mvn/version "0.1.6"}
+        clj-tuple/clj-tuple {:mvn/version "0.2.2"}
+        clj-fuzzy/clj-fuzzy {:mvn/version "0.4.1"
+                             :exclusions [org.clojure/clojurescript]}
+        org.deephacks.lmdbjni/lmdbjni {:mvn/version "0.4.6"}
+        org.deephacks.lmdbjni/lmdbjni-linux64 {:mvn/version "0.4.6"}
+        org.deephacks.lmdbjni/lmdbjni-win64 {:mvn/version "0.4.6"}
+        org.deephacks.lmdbjni/lmdbjni-osx64 {:mvn/version "0.4.6"}
+        org.clojure/tools.analyzer {:mvn/version "1.1.1"}
+        com.taoensso/encore {:mvn/version "3.60.0"}
+        io.aviso/pretty {:mvn/version "1.4.4"}}
+
+ ;; JVM options, repeated in each alias that starts a JVM (deps.edn has no
+ ;; top-level :jvm-opts). Agrona reads jdk.internal.misc.Unsafe, so the
+ ;; embedded Aeron media driver needs the --add-opens; --enable-native-access
+ ;; silences nippy/lz4's restricted-method warning on JDK 24+.
+ :aliases
+ {;; clojure -X:test — the suite without ^:stress and ^:broken tests.
+  ;;   clojure -X:test :includes '[:smoke]'                 smoke tests only
+  ;;   clojure -X:test :excludes '[]' :includes '[:stress]' stress tests only
+  ;;   clojure -X:test :nses '[onyx.peer.dag-test]'         one namespace
+  :test
+  {:extra-paths ["test" "test-resources"]
+   :extra-deps {org.clojure/java.jmx {:mvn/version "1.0.0"}
+                org.clojure/test.check {:mvn/version "1.1.1"}
+                org.senatehouse/expect-call {:mvn/version "0.3.0"}
+                mdrogalis/stateful-check {:mvn/version "0.3.2"}
+                com.gfredericks/test.chuck {:mvn/version "0.2.14"}
+                joda-time/joda-time {:mvn/version "2.12.5"}
+                io.github.cognitect-labs/test-runner {:git/tag "v0.5.1"
+                                                      :git/sha "dfb30dd"}}
+   :jvm-opts ["-Xmx2400M"
+              "-XX:+UseG1GC"
+              "-XX:-OmitStackTraceInFastThrow"
+              "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"
+              "--enable-native-access=ALL-UNNAMED"]
+   :main-opts ["-m" "cognitect.test-runner" "-e" ":stress" "-e" ":broken"]
+   :exec-fn cognitect.test-runner.api/test
+   :exec-args {:excludes [:stress :broken]}}
+
+  ;; clojure -M:nrepl — nREPL server on a free port, with the test paths
+  ;; and test dependencies.
+  :nrepl
+  {:extra-paths ["test" "test-resources"]
+   :extra-deps {nrepl/nrepl {:mvn/version "1.7.0"}
+                org.clojure/java.jmx {:mvn/version "1.0.0"}
+                org.clojure/test.check {:mvn/version "1.1.1"}
+                org.senatehouse/expect-call {:mvn/version "0.3.0"}
+                mdrogalis/stateful-check {:mvn/version "0.3.2"}
+                com.gfredericks/test.chuck {:mvn/version "0.2.14"}
+                joda-time/joda-time {:mvn/version "2.12.5"}}
+   :jvm-opts ["-Xmx2400M"
+              "-XX:+UseG1GC"
+              "-XX:-OmitStackTraceInFastThrow"
+              "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"
+              "--enable-native-access=ALL-UNNAMED"]
+   :main-opts ["-m" "nrepl.cmdline" "--port" "0"]}
+
+  ;; clojure -M:check — load every src namespace with reflection warnings
+  ;; on, like `lein check`. The two warnings in clojure/tools/reader.clj
+  ;; come from tools.reader 1.3.6 (a dependency), not from onyx.
+  :check
+  {:extra-deps {org.clojure/tools.namespace {:mvn/version "1.5.0"}}
+   :jvm-opts ["--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"
+              "--enable-native-access=ALL-UNNAMED"]
+   :main-opts ["-e" "(do (set! *warn-on-reflection* true) nil)"
+               "-e" "(require '[clojure.tools.namespace.find :as find]) (run! (fn [n] (println \"Checking\" n) (require n)) (find/find-namespaces-in-dir (java.io.File. \"src\")))"]}
+
+  ;; clojure -T:build <task> — see build.clj (clean, jar, deploy).
+  :build
+  {:deps {io.github.clojure/tools.build {:mvn/version "0.10.10"}
+          slipset/deps-deploy {:mvn/version "0.2.2"}}
+   :ns-default build}}}

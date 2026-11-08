@@ -1,4 +1,4 @@
-(ns onyx.log.generative-peer-join
+(ns onyx.log.generative-peer-join-test
   (:require [onyx.log.generators :as log-gen]
             [onyx.extensions :as extensions]
             [onyx.api :as api]

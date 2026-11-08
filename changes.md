@@ -1,3 +1,8 @@
+## Unreleased
+* The build moved from Leiningen to the Clojure CLI (`deps.edn`, with tools.build
+  and deps-deploy in `build.clj`). The jar keeps the same coordinates and
+  dependencies. Run the tests with `clojure -X:test`.
+
 ## 0.17.2
 * The coordination log version is now 0.17.2. Use a new `:onyx/tenancy-id` when
   upgrading; a 0.17.2 coordinator would wait forever for older peers to report

@@ -8,7 +8,13 @@ This is a community-maintained fork of [onyx-platform/onyx](https://github.com/o
 
 ## Installation
 
-Add to your `project.clj`:
+In `deps.edn`:
+
+```clojure
+com.github.clojure-finance/onyx {:mvn/version "0.17.2"}
+```
+
+In Leiningen's `project.clj`:
 
 ```clojure
 [com.github.clojure-finance/onyx "0.17.2"]
@@ -24,7 +30,7 @@ Clojars also lists 0.1.0 and 0.2.0 from the fork's earlier version scheme. 0.2.0
 --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED
 ```
 
-In Leiningen:
+In a `deps.edn` alias or in Leiningen's `project.clj`:
 
 ```clojure
 :jvm-opts ["--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"]
@@ -158,19 +164,30 @@ Plugin template for building your own: [`onyx-plugin`](https://github.com/onyx-p
 
 ## Building from Source
 
-Install into your local Maven repository:
-
-```bash
-lein install
-```
+The build uses the Clojure CLI (`deps.edn`, with `build.clj` for tools.build).
 
 Run the test suite:
 
 ```bash
-lein test
+clojure -X:test
 ```
 
-The default selector skips tests tagged `^:broken` or `^:stress`. Run namespaces one at a time if you encounter issues — embedded ZooKeeper and the Aeron directory under `/dev/shm` can collide across parallel runs.
+This skips tests tagged `^:broken` or `^:stress`. `clojure -X:test :includes '[:smoke]'` runs only the smoke tests, `clojure -X:test :excludes '[]' :includes '[:stress]'` only the stress tests, and `clojure -X:test :nses '[onyx.peer.dag-test]'` one namespace. Don't run two test JVMs at the same time: embedded ZooKeeper and the Aeron directory under `/dev/shm` collide across parallel runs.
+
+Load every source namespace with reflection warnings on:
+
+```bash
+clojure -M:check
+```
+
+Build the jar, or install it into your local Maven repository:
+
+```bash
+clojure -T:build jar
+clojure -T:build install
+```
+
+`clojure -M:nrepl` starts an nREPL server with the test paths and test dependencies on the classpath.
 
 ## Contributors
 

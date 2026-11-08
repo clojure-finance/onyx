@@ -1,12 +1,9 @@
 /target
 /classes
-/checkouts
 /data
-pom.xml
-pom.xml.asc
 *.jar
 *.class
-/.lein-*
+/.cpcache
 /.nrepl-port
 onyx.log.[0-9]*
 hs_err_pid*
